@@ -8,19 +8,17 @@
 
 import Foundation
 
-#if canImport(Cocoa)
-import Cocoa
-public typealias Font = NSFont
-public typealias Color = NSColor
-#elseif canImport(UIKit)
-import UIKit
-public typealias Font = UIFont
-public typealias Color = UIColor
-#endif
+public enum Kind {
+    case text
+    case keyword
+    case string
+    case comment
+    case emphasis
+    case link
+}
 
 public struct Pattern {
     public let name: String
+    public let kind: Kind
     public let regex: String
-    public var font: Font?
-    public var foregroundColor: Color?
 }

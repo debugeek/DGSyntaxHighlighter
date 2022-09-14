@@ -18,16 +18,16 @@ public struct DGSyntaxHighlighter {
     }
     
     public static func highlight(string: String, identifier: Identifier) -> AttributedString {
-        var styles = [Style]()
-        styles.append(Plain())
-        if identifier != .plain, let style = style(forIdentifier: identifier) {
-            styles.append(style)
+        var languages = [Language]()
+        languages.append(Plain())
+        if identifier != .plain, let language = language(forIdentifier: identifier) {
+            languages.append(language)
         }
         
         var attributedString = AttributedString(string)
         
-        for style in styles {
-            for pattern in style.patterns {
+        for language in languages {
+            for pattern in language.patterns {
                 guard let regex = try? NSRegularExpression(pattern: pattern.regex) else {
                     continue
                 }
@@ -37,8 +37,18 @@ public struct DGSyntaxHighlighter {
                     guard let range = Range(result.range, in: attributedString) else {
                         continue
                     }
-                    attributedString[range].font = pattern.font
-                    attributedString[range].foregroundColor = pattern.foregroundColor
+                    
+                    let style: Style
+                    switch pattern.kind {
+                    case .text: style = .text
+                    case .keyword: style = .keyword
+                    case .string: style = .string
+                    case .comment: style = .comment
+                    case .emphasis: style = .emphasis
+                    case .link: style = .link
+                    }
+                    attributedString[range].font = style.font
+                    attributedString[range].foregroundColor = style.foregroundColor
                 }
             }
         }
@@ -46,11 +56,11 @@ public struct DGSyntaxHighlighter {
         return attributedString
     }
     
-    public static func style(forIdentifier identifier: Identifier) -> Style? {
+    public static func language(forIdentifier identifier: Identifier) -> Language? {
         switch identifier {
         case .swift: return Swift()
         case .markdown: return Markdown()
-        default: return Plain()
+        default: return nil
         }
     }
     
