@@ -19,27 +19,38 @@ public typealias Font = UIFont
 public typealias Color = UIColor
 #endif
 
-struct Style {
+public struct Style {
     
-    let font: Font?
-    let foregroundColor: Color?
+    public let font: Font?
+    public let foregroundColor: Color?
     
-    static let text = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                            foregroundColor: Color.color(withHex: 0xFFFFFF, alpha: 0.85))
+    public static let text = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
+                                   foregroundColor: Color.color(withHex: 0xFFFFFF, alpha: 0.85))
     
-    static let keyword = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                               foregroundColor: Color.color(withHex: 0xFC5FA3))
+    public static let keyword = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
+                                      foregroundColor: Color.color(withHex: 0xFC5FA3))
                                
-    static let string = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                              foregroundColor: Color.color(withHex: 0xFC6A5D))
+    public static let string = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
+                                     foregroundColor: Color.color(withHex: 0xFC6A5D))
     
-    static let comment = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                               foregroundColor: Color.color(withHex: 0x6C7986))
+    public static let comment = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
+                                      foregroundColor: Color.color(withHex: 0x6C7986))
     
-    static let emphasis = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                                foregroundColor: Color.color(withHex: 0x5DD8FF))
+    public static let emphasis = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
+                                       foregroundColor: Color.color(withHex: 0x5DD8FF))
     
-    static let link = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                            foregroundColor: Color.color(withHex: 0x5DD8FF))
+    public static let link = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
+                                   foregroundColor: Color.color(withHex: 0x5DD8FF))
 
+    public static func style(forKind kind: Kind) -> Style {
+        switch kind {
+        case .text: return .text
+        case .keyword: return .keyword
+        case .string: return .string
+        case .comment: return .comment
+        case .emphasis: return .emphasis
+        case .link: return .link
+        }
+    }
+    
 }

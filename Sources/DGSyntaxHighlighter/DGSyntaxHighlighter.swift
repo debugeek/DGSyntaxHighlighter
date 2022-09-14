@@ -32,20 +32,12 @@ public struct DGSyntaxHighlighter {
                     continue
                 }
                 
+                let style = Style.style(forKind: pattern.kind)
+                
                 let results = regex.matches(in: string, range: NSRange(location: 0, length: string.count))
                 for result in results {
                     guard let range = Range(result.range, in: attributedString) else {
                         continue
-                    }
-                    
-                    let style: Style
-                    switch pattern.kind {
-                    case .text: style = .text
-                    case .keyword: style = .keyword
-                    case .string: style = .string
-                    case .comment: style = .comment
-                    case .emphasis: style = .emphasis
-                    case .link: style = .link
                     }
                     attributedString[range].font = style.font
                     attributedString[range].foregroundColor = style.foregroundColor
