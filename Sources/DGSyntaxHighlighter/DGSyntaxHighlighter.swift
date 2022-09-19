@@ -15,6 +15,7 @@ public struct DGSyntaxHighlighter {
         case plain = "plain"
         case markdown = "markdown"
         case swift = "swift"
+        case oc = "objective-c"
     }
     
     public static func highlight(string: String, identifier: Identifier) -> AttributedString {
@@ -52,6 +53,7 @@ public struct DGSyntaxHighlighter {
         switch identifier {
         case .swift: return Swift()
         case .markdown: return Markdown()
+        case .oc: return ObjectiveC()
         default: return nil
         }
     }
