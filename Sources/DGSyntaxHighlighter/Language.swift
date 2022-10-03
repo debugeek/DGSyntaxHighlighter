@@ -12,4 +12,6 @@ public protocol Language {
     
     var patterns: [Pattern] { get }
     
+    var exclusivePatterns: [Pattern] { get }
+    
 }

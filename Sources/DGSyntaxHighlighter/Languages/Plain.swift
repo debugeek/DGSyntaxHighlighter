@@ -18,4 +18,8 @@ public struct Plain: Language {
         ]
     }
     
+    public var exclusivePatterns: [Pattern] {
+        return []
+    }
+    
 }

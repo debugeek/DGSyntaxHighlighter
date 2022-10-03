@@ -8,6 +8,7 @@
 
 import Foundation
 import DGExtension
+import AppKit
 
 public struct DGSyntaxHighlighter {
 
@@ -19,27 +20,58 @@ public struct DGSyntaxHighlighter {
     }
     
     public static func highlight(string: String, identifier: Identifier) -> AttributedString {
-        var languages = [Language]()
-        languages.append(Plain())
-        if identifier != .plain, let language = language(forIdentifier: identifier) {
-            languages.append(language)
-        }
-        
         var attributedString = AttributedString(string)
         
-        for language in languages {
-            for pattern in language.patterns {
-                guard let regex = try? NSRegularExpression(pattern: pattern.regex) else {
-                    continue
+        guard let language = language(forIdentifier: identifier) else { return attributedString }
+        
+        var ranges: [NSRange] = [NSRange(location: 0, length: string.count)]
+        for pattern in language.exclusivePatterns {
+            guard let regex = try? NSRegularExpression(pattern: pattern.regex) else {
+                continue
+            }
+            
+            let style = Style.style(forKind: pattern.kind)
+            
+            repeat {
+                var matched = false
+                for range in ranges {
+                    guard let result = regex.matches(in: string, range: range).first else {
+                        continue
+                    }
+                    if let range = Range(result.range, in: attributedString) {
+                        attributedString[range].font = style.font
+                        attributedString[range].foregroundColor = style.foregroundColor
+                    }
+                 
+                    ranges.removeAll(where: { NSIntersectionRange($0, result.range).length > 0 })
+                    ranges.append(NSRange(location: min(range.lowerBound, result.range.lowerBound),
+                                          length: abs(range.lowerBound - result.range.lowerBound)))
+                    ranges.append(NSRange(location: min(range.upperBound, result.range.upperBound),
+                                          length: abs(range.upperBound - result.range.upperBound)))
+                    
+                    matched = true
+                    break
                 }
-                
-                let style = Style.style(forKind: pattern.kind)
-                
-                let results = regex.matches(in: string, range: NSRange(location: 0, length: string.count))
+                if !matched {
+                    break
+                }
+            } while ranges.count > 0
+        }
+        
+        for pattern in language.patterns {
+            guard let regex = try? NSRegularExpression(pattern: pattern.regex) else {
+                continue
+            }
+            
+            let style = Style.style(forKind: pattern.kind)
+            
+            for range in ranges {
+                let results = regex.matches(in: string, range: range)
                 for result in results {
                     guard let range = Range(result.range, in: attributedString) else {
                         continue
                     }
+                    
                     attributedString[range].font = style.font
                     attributedString[range].foregroundColor = style.foregroundColor
                 }
@@ -51,8 +83,8 @@ public struct DGSyntaxHighlighter {
     
     public static func language(forIdentifier identifier: Identifier) -> Language? {
         switch identifier {
-        case .swift: return Swift()
         case .markdown: return Markdown()
+        case .swift: return Swift()
         case .oc: return ObjectiveC()
         default: return nil
         }

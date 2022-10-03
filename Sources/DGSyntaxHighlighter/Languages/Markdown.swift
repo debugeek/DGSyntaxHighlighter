@@ -12,26 +12,38 @@ public struct Markdown: Language {
     
     public var patterns: [Pattern] {
         return [
+            Pattern(name: "plain",
+                    kind: .text,
+                    regex: ".*"),
+            
             Pattern(name: "heading",
                     kind: .emphasis,
-                    regex: "(#{1,6}\\s)(.*)"),
+                    regex: "(#{1,6}) (.+)"),
         
             Pattern(name: "boldItalic",
                     kind: .emphasis,
-                    regex: "(\\*|\\_)+(\\S+)(\\*|\\_)+"),
-            
-            Pattern(name: "link",
-                    kind: .link,
-                    regex: "\\[([^\\]]+)\\]\\(([^\\)\"\\s]+)(?:\\s+\"(.*)\")?\\)"),
+                    regex: "(\\*+(.+?)\\*+|~+(.+?)~+|_+(.+?)_+)"),
             
             Pattern(name: "image",
                     kind: .link,
-                    regex: "\\!\\[([^\\]]+)\\]\\(([^\\)\"\\s]+)(?:\\s+\"(.*)\")?\\)"),
+                    regex: "!\\[(.*)\\]\\((.+)\\)"),
             
-            Pattern(name: "code",
+            Pattern(name: "link",
+                    kind: .link,
+                    regex: "\\[(.*)\\]\\((.+)\\)"),
+            
+            Pattern(name: "inlineCode",
                     kind: .string,
-                    regex: "(`[^`]{1,}`)")
+                    regex: "(?=`)`(?!`)[^`]*(?=`)`(?!`)")
             ]
+    }
+    
+    public var exclusivePatterns: [Pattern] {
+        return [
+            Pattern(name: "codeBlock",
+                    kind: .string,
+                    regex: "```\\S*\\n[\\s\\S]*?\\n```")
+        ]
     }
     
 }
