@@ -19,10 +19,19 @@ public struct DGSyntaxHighlighter {
         case oc = "objective-c"
     }
     
-    public static func highlight(string: String, identifier: Identifier) -> AttributedString {
+    public static func highlighted(string: String, identifier: Identifier) -> AttributedString {
         var attributedString = AttributedString(string)
-        
-        guard let language = language(forIdentifier: identifier) else { return attributedString }
+        highlight(string: string, identifier: identifier) { style, range in
+            if let range = Range(range, in: attributedString) {
+                attributedString[range].font = style.font
+                attributedString[range].foregroundColor = style.foregroundColor
+            }
+        }
+        return attributedString
+    }
+    
+    public static func highlight(string: String, identifier: Identifier, callback: ((Style, NSRange) -> Void)) {
+        guard let language = language(forIdentifier: identifier) else { return }
         
         var ranges: [NSRange] = [NSRange(location: 0, length: string.count)]
         for pattern in language.exclusivePatterns {
@@ -38,10 +47,8 @@ public struct DGSyntaxHighlighter {
                     guard let result = regex.matches(in: string, range: range).first else {
                         continue
                     }
-                    if let range = Range(result.range, in: attributedString) {
-                        attributedString[range].font = style.font
-                        attributedString[range].foregroundColor = style.foregroundColor
-                    }
+                    
+                    callback(style, result.range)
                  
                     ranges.removeAll(where: { NSIntersectionRange($0, result.range).length > 0 })
                     ranges.append(NSRange(location: min(range.lowerBound, result.range.lowerBound),
@@ -68,17 +75,10 @@ public struct DGSyntaxHighlighter {
             for range in ranges {
                 let results = regex.matches(in: string, range: range)
                 for result in results {
-                    guard let range = Range(result.range, in: attributedString) else {
-                        continue
-                    }
-                    
-                    attributedString[range].font = style.font
-                    attributedString[range].foregroundColor = style.foregroundColor
+                    callback(style, result.range)
                 }
             }
         }
-        
-        return attributedString
     }
     
     public static func language(forIdentifier identifier: Identifier) -> Language? {
