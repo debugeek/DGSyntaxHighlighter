@@ -98,7 +98,7 @@ public struct DGSyntaxHighlighter {
         case .markdown: return Markdown()
         case .swift: return Swift()
         case .oc: return ObjectiveC()
-        default: return nil
+        default: return Plain()
         }
     }
     
