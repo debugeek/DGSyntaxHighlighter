@@ -9,8 +9,8 @@
 import Foundation
 
 public protocol Language {
-    
-    var patterns: [Pattern] { get }
+
+    var defaultPatterns: [Pattern] { get }
     
     var exclusivePatterns: [Pattern] { get }
     

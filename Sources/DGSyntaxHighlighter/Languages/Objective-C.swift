@@ -10,7 +10,7 @@ import Foundation
 
 public struct ObjectiveC: Language {
     
-    public var patterns: [Pattern] {
+    public var defaultPatterns: [Pattern] {
         return [
             Pattern(name: "plain",
                     kind: .text,

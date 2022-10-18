@@ -18,22 +18,29 @@ public struct DGSyntaxHighlighter {
         case swift = "swift"
         case oc = "objective-c"
     }
+
+    public struct Attribute {
+        public let style: Style
+        public let range: NSRange
+    }
     
     public static func highlighted(string: String, identifier: Identifier) -> AttributedString {
         var attributedString = AttributedString(string)
-        highlight(string: string, identifier: identifier) { style, range in
-            if let range = Range(range, in: attributedString) {
-                attributedString[range].font = style.font
-                attributedString[range].foregroundColor = style.foregroundColor
-            }
+        highlight(string: string, range: NSMakeRange(0, string.count), identifier: identifier)?.forEach {
+            guard let range = Range($0.range, in: attributedString) else { return }
+            attributedString[range].font = $0.style.font
+            attributedString[range].foregroundColor = $0.style.foregroundColor
         }
         return attributedString
     }
     
-    public static func highlight(string: String, identifier: Identifier, callback: ((Style, NSRange) -> Void)) {
-        guard let language = language(forIdentifier: identifier) else { return }
-        
-        var ranges: [NSRange] = [NSRange(location: 0, length: string.count)]
+    public static func highlight(string: String, range: NSRange, identifier: Identifier) -> [Attribute]? {
+        guard let language = language(forIdentifier: identifier) else { return nil }
+
+        var attributes = [Attribute]()
+
+        var effectiveRanges: [NSRange] = [NSMakeRange(0, string.count)]
+
         for pattern in language.exclusivePatterns {
             guard let regex = try? NSRegularExpression(pattern: pattern.regex) else {
                 continue
@@ -43,18 +50,16 @@ public struct DGSyntaxHighlighter {
             
             repeat {
                 var matched = false
-                for range in ranges {
-                    guard let result = regex.matches(in: string, range: range).first else {
-                        continue
-                    }
-                    
-                    callback(style, result.range)
-                 
-                    ranges.removeAll(where: { NSIntersectionRange($0, result.range).length > 0 })
-                    ranges.append(NSRange(location: min(range.lowerBound, result.range.lowerBound),
-                                          length: abs(range.lowerBound - result.range.lowerBound)))
-                    ranges.append(NSRange(location: min(range.upperBound, result.range.upperBound),
-                                          length: abs(range.upperBound - result.range.upperBound)))
+                for effectiveRange in effectiveRanges {
+                    guard let result = regex.matches(in: string, range: effectiveRange).first else { continue }
+
+                    attributes.append(Attribute(style: style, range: result.range))
+
+                    effectiveRanges.removeAll(where: { NSIntersectionRange($0, result.range).length > 0 })
+                    effectiveRanges.append(NSRange(location: min(effectiveRange.lowerBound, result.range.lowerBound),
+                                                   length: abs(effectiveRange.lowerBound - result.range.lowerBound)))
+                    effectiveRanges.append(NSRange(location: min(effectiveRange.upperBound, result.range.upperBound),
+                                                   length: abs(effectiveRange.upperBound - result.range.upperBound)))
                     
                     matched = true
                     break
@@ -62,23 +67,30 @@ public struct DGSyntaxHighlighter {
                 if !matched {
                     break
                 }
-            } while ranges.count > 0
+            } while effectiveRanges.count > 0
         }
-        
-        for pattern in language.patterns {
-            guard let regex = try? NSRegularExpression(pattern: pattern.regex) else {
-                continue
-            }
-            
-            let style = Style.style(forKind: pattern.kind)
-            
-            for range in ranges {
-                let results = regex.matches(in: string, range: range)
+
+        for effectiveRange in effectiveRanges {
+            guard effectiveRange.intersection(range) != nil else { continue }
+
+            for pattern in language.defaultPatterns {
+                guard let regex = try? NSRegularExpression(pattern: pattern.regex) else {
+                    continue
+                }
+
+                let style = Style.style(forKind: pattern.kind)
+
+                let results = regex.matches(in: string, range: effectiveRange)
                 for result in results {
-                    callback(style, result.range)
+                    if result.range.intersection(range) == nil {
+                        continue
+                    }
+                    attributes.append(Attribute(style: style, range: result.range))
                 }
             }
         }
+
+        return attributes
     }
     
     public static func language(forIdentifier identifier: Identifier) -> Language? {
