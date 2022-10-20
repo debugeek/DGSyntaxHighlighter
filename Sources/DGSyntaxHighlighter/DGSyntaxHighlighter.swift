@@ -8,7 +8,6 @@
 
 import Foundation
 import DGExtension
-import AppKit
 
 public struct DGSyntaxHighlighter {
 
