@@ -18,11 +18,27 @@ public struct Markdown: Language {
             
             Pattern(name: "heading",
                     kind: .emphasis,
-                    regex: "(#{1,6}) (.+)"),
+                    regex: "^#{1,6}[\\t ].+$"),
         
-            Pattern(name: "boldItalic",
+            Pattern(name: "bold",
                     kind: .emphasis,
-                    regex: "(\\*+(.+?)\\*+|~+(.+?)~+|_+(.+?)_+)"),
+                    regex: "(\\*{2})(?!\\*).+?\\1"),
+            
+            Pattern(name: "bold",
+                    kind: .emphasis,
+                    regex: "(_{2})(?!_).+?\\1"),
+            
+            Pattern(name: "italic",
+                    kind: .emphasis,
+                    regex: "(\\*{1})(?!\\*).+?\\1"),
+            
+            Pattern(name: "italic",
+                    kind: .emphasis,
+                    regex: "(_{1})(?!_).+?\\1"),
+            
+            Pattern(name: "strikethrough",
+                    kind: .emphasis,
+                    regex: "(~{2})(?!~).+?\\1"),
             
             Pattern(name: "image",
                     kind: .link,
@@ -34,7 +50,7 @@ public struct Markdown: Language {
             
             Pattern(name: "inlineCode",
                     kind: .string,
-                    regex: "(?=`)`(?!`)[^`]*(?=`)`(?!`)")
+                    regex: "`(?!`)(.+?)`")
             ]
     }
     
@@ -42,7 +58,7 @@ public struct Markdown: Language {
         return [
             Pattern(name: "codeBlock",
                     kind: .string,
-                    regex: "```\\S*\\n[\\s\\S]*?\\n```")
+                    regex: "^```(?!`)\\S*\\n[\\s\\S]*?\\n```$")
         ]
     }
     

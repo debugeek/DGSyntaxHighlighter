@@ -41,7 +41,7 @@ public struct DGSyntaxHighlighter {
         var effectiveRanges: [NSRange] = [NSMakeRange(0, string.count)]
 
         for pattern in language.exclusivePatterns {
-            guard let regex = try? NSRegularExpression(pattern: pattern.regex) else {
+            guard let regex = try? NSRegularExpression(pattern: pattern.regex, options: .anchorsMatchLines) else {
                 continue
             }
             
@@ -73,7 +73,7 @@ public struct DGSyntaxHighlighter {
             guard effectiveRange.intersection(range) != nil else { continue }
 
             for pattern in language.defaultPatterns {
-                guard let regex = try? NSRegularExpression(pattern: pattern.regex) else {
+                guard let regex = try? NSRegularExpression(pattern: pattern.regex, options: .anchorsMatchLines) else {
                     continue
                 }
 
