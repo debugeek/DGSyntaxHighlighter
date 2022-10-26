@@ -18,7 +18,7 @@ public struct Markdown: Language {
             
             Pattern(name: "heading",
                     kind: .emphasis,
-                    regex: "^#{1,6}[\\t ].+$"),
+                    regex: "^\\#{1,6}[\\t\\ ].+$"),
         
             Pattern(name: "bold",
                     kind: .emphasis,
@@ -26,7 +26,7 @@ public struct Markdown: Language {
             
             Pattern(name: "bold",
                     kind: .emphasis,
-                    regex: "(_{2})(?!_).+?\\1"),
+                    regex: "(\\_{2})(?!\\_).+?\\1"),
             
             Pattern(name: "italic",
                     kind: .emphasis,
@@ -34,12 +34,24 @@ public struct Markdown: Language {
             
             Pattern(name: "italic",
                     kind: .emphasis,
-                    regex: "(_{1})(?!_).+?\\1"),
+                    regex: "(\\_{1})(?!\\_).+?\\1"),
             
             Pattern(name: "strikethrough",
                     kind: .emphasis,
-                    regex: "(~{2})(?!~).+?\\1"),
-            
+                    regex: "(\\~{2})(?!\\~).+?\\1"),
+
+            Pattern(name: "list",
+                    kind: .keyword,
+                    regex: "^\\d\\.[\\t\\ ]"),
+
+            Pattern(name: "list",
+                    kind: .keyword,
+                    regex: "^[\\t\\ ]*[\\*\\+\\-][\\t\\ ]+"),
+
+            Pattern(name: "list",
+                    kind: .keyword,
+                    regex: "^\\-\\ \\[[x\\ ]\\][\\t\\ ]"),
+
             Pattern(name: "image",
                     kind: .link,
                     regex: "!\\[(.*)\\]\\((.+)\\)"),
@@ -50,7 +62,7 @@ public struct Markdown: Language {
             
             Pattern(name: "inlineCode",
                     kind: .string,
-                    regex: "`(?!`)(.+?)`")
+                    regex: "\\`(?!\\`)(.+?)\\`")
             ]
     }
     
@@ -58,7 +70,7 @@ public struct Markdown: Language {
         return [
             Pattern(name: "codeBlock",
                     kind: .string,
-                    regex: "^```(?!`)\\S*\\n[\\s\\S]*?\\n```$")
+                    regex: "^\\`\\`\\`(?!\\`)\\S*\\n[\\s\\S]*?\\n\\`\\`\\`$")
         ]
     }
     
