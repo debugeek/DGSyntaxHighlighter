@@ -25,7 +25,7 @@ public struct DGSyntaxHighlighter {
     
     public static func highlighted(string: String, identifier: Identifier) -> AttributedString {
         var attributedString = AttributedString(string)
-        highlight(string: string, range: NSMakeRange(0, string.count), identifier: identifier)?.forEach {
+        highlight(string: string, range: NSMakeRange(0, (string as NSString).length), identifier: identifier)?.forEach {
             guard let range = Range($0.range, in: attributedString) else { return }
             attributedString[range].font = $0.style.font
             attributedString[range].foregroundColor = $0.style.foregroundColor
@@ -38,7 +38,7 @@ public struct DGSyntaxHighlighter {
 
         var attributes = [Attribute]()
 
-        var effectiveRanges: [NSRange] = [NSMakeRange(0, string.count)]
+        var effectiveRanges: [NSRange] = [range]
 
         for pattern in language.exclusivePatterns {
             guard let regex = try? NSRegularExpression(pattern: pattern.regex, options: .anchorsMatchLines) else {
@@ -47,31 +47,23 @@ public struct DGSyntaxHighlighter {
             
             let style = Style.style(forKind: pattern.kind)
             
-            repeat {
-                var matched = false
-                for effectiveRange in effectiveRanges {
-                    guard let result = regex.matches(in: string, range: effectiveRange).first else { continue }
-
-                    attributes.append(Attribute(style: style, range: result.range))
-
-                    effectiveRanges.removeAll(where: { NSIntersectionRange($0, result.range).length > 0 })
-                    effectiveRanges.append(NSRange(location: min(effectiveRange.lowerBound, result.range.lowerBound),
-                                                   length: abs(effectiveRange.lowerBound - result.range.lowerBound)))
-                    effectiveRanges.append(NSRange(location: min(effectiveRange.upperBound, result.range.upperBound),
-                                                   length: abs(effectiveRange.upperBound - result.range.upperBound)))
-                    
-                    matched = true
-                    break
+            for effectiveRange in effectiveRanges {
+                let results = regex.matches(in: string, range: effectiveRange)
+                if results.count == 0 {
+                    continue
                 }
-                if !matched {
-                    break
+                
+                let ranges = results.map { $0.range }
+                for range in ranges {
+                    attributes.append(Attribute(style: style, range: range))
+                    effectiveRanges.removeAll(where: { $0.intersection(range) != nil })
                 }
-            } while effectiveRanges.count > 0
+                
+                effectiveRanges.append(contentsOf: effectiveRange.subranges(byExcludingRanges: ranges))
+            }
         }
 
         for effectiveRange in effectiveRanges {
-            guard effectiveRange.intersection(range) != nil else { continue }
-
             for pattern in language.defaultPatterns {
                 guard let regex = try? NSRegularExpression(pattern: pattern.regex, options: .anchorsMatchLines) else {
                     continue
@@ -81,9 +73,6 @@ public struct DGSyntaxHighlighter {
 
                 let results = regex.matches(in: string, range: effectiveRange)
                 for result in results {
-                    if result.range.intersection(range) == nil {
-                        continue
-                    }
                     attributes.append(Attribute(style: style, range: result.range))
                 }
             }
