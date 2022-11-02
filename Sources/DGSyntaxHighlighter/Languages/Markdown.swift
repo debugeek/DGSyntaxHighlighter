@@ -22,23 +22,23 @@ public struct Markdown: Language {
         
             Pattern(name: "bold",
                     kind: .emphasis,
-                    regex: "(\\*{2})(?!\\*).+?\\1"),
+                    regex: "\\*\\*(?!\\*).+?\\*\\*"),
             
             Pattern(name: "bold",
                     kind: .emphasis,
-                    regex: "(\\_{2})(?!\\_).+?\\1"),
+                    regex: "\\_\\_(?!\\_).+?\\_\\_"),
             
             Pattern(name: "italic",
                     kind: .emphasis,
-                    regex: "(\\*{1})(?!\\*).+?\\1"),
+                    regex: "\\ \\*(?!\\*).+?\\*\\ "),
             
             Pattern(name: "italic",
                     kind: .emphasis,
-                    regex: "(\\_{1})(?!\\_).+?\\1"),
+                    regex: "\\ \\_(?!\\_).+?\\_\\ "),
             
             Pattern(name: "strikethrough",
                     kind: .emphasis,
-                    regex: "(\\~{2})(?!\\~).+?\\1"),
+                    regex: "\\~\\~(?!\\~).+?\\~\\~"),
 
             Pattern(name: "list",
                     kind: .keyword,
