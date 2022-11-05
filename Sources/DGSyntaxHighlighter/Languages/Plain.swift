@@ -10,7 +10,7 @@ import Foundation
 
 public struct Plain: Language {
     
-    public var defaultPatterns: [Pattern] {
+    public var singleLinePatterns: [Pattern] {
         return [
             Pattern(name: "plain",
                     kind: .text,
@@ -18,7 +18,7 @@ public struct Plain: Language {
         ]
     }
     
-    public var exclusivePatterns: [Pattern] {
+    public var multilinePatterns: [Pattern] {
         return []
     }
     

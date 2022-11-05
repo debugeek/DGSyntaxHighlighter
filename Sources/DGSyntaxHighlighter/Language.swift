@@ -10,8 +10,8 @@ import Foundation
 
 public protocol Language {
 
-    var defaultPatterns: [Pattern] { get }
+    var singleLinePatterns: [Pattern] { get }
     
-    var exclusivePatterns: [Pattern] { get }
+    var multilinePatterns: [Pattern] { get }
     
 }

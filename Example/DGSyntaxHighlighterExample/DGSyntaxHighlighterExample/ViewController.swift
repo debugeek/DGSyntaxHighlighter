@@ -32,7 +32,9 @@ var numbers = [20, 19, 7, 12]
 hasAnyMatches(list: numbers, condition: lessThanTen)
 """
         
-        let attributedString = DGSyntaxHighlighter.highlighted(string: text, identifier: .swift)
+        var highlighter = DGSyntaxHighlighter(identifier: .swift)
+        highlighter.styleSheet.text.foregroundColor = .textColor
+        let attributedString = highlighter.highlighted(string: text, options: .all)
         textView.textStorage?.setAttributedString(NSAttributedString(attributedString))
     }
 

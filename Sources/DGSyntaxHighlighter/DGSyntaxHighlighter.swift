@@ -18,14 +18,35 @@ public struct DGSyntaxHighlighter {
         case oc = "objective-c"
     }
 
+    public struct Options: OptionSet {
+        public let rawValue: Int
+
+        public init(rawValue: Int) { self.rawValue = rawValue }
+        
+        public static let singleLine = Options(rawValue: 1 << 0)
+        public static let multiline = Options(rawValue: 1 << 1)
+        public static let all: Options = [.singleLine, .multiline]
+    }
+    
+    let identifier: Identifier
+    
+    let language: Language
+
+    public var styleSheet = StyleSheet()
+
+    public init(identifier: Identifier) {
+        self.language = Self.language(forIdentifier: identifier)
+        self.identifier = identifier
+    }
+    
     public struct Attribute {
         public let style: Style
         public let range: NSRange
     }
     
-    public static func highlighted(string: String, identifier: Identifier) -> AttributedString {
+    public func highlighted(string: String, options: Options) -> AttributedString {
         var attributedString = AttributedString(string)
-        highlight(string: string, range: NSMakeRange(0, (string as NSString).length), identifier: identifier)?.forEach {
+        highlight(string: string, range: NSMakeRange(0, (string as NSString).length), options: options)?.forEach {
             guard let range = Range($0.range, in: attributedString) else { return }
             attributedString[range].font = $0.style.font
             attributedString[range].foregroundColor = $0.style.foregroundColor
@@ -33,47 +54,49 @@ public struct DGSyntaxHighlighter {
         return attributedString
     }
     
-    public static func highlight(string: String, range: NSRange, identifier: Identifier) -> [Attribute]? {
-        guard let language = language(forIdentifier: identifier) else { return nil }
-
+    public func highlight(string: String, range: NSRange, options: Options) -> [Attribute]? {
         var attributes = [Attribute]()
 
         var effectiveRanges: [NSRange] = [range]
 
-        for pattern in language.exclusivePatterns {
-            guard let regex = try? NSRegularExpression(pattern: pattern.regex, options: .anchorsMatchLines) else {
-                continue
-            }
-            
-            let style = Style.style(forKind: pattern.kind)
-            
-            for effectiveRange in effectiveRanges {
-                let results = regex.matches(in: string, range: effectiveRange)
-                if results.count == 0 {
-                    continue
-                }
-                
-                let ranges = results.map { $0.range }
-                for range in ranges {
-                    attributes.append(Attribute(style: style, range: range))
-                    effectiveRanges.removeAll(where: { $0.intersection(range) != nil })
-                }
-                
-                effectiveRanges.append(contentsOf: effectiveRange.subranges(byExcludingRanges: ranges))
-            }
-        }
-
-        for effectiveRange in effectiveRanges {
-            for pattern in language.defaultPatterns {
+        if options.contains(.multiline) {
+            for pattern in language.multilinePatterns {
                 guard let regex = try? NSRegularExpression(pattern: pattern.regex, options: .anchorsMatchLines) else {
                     continue
                 }
+                
+                let style = styleSheet.style(forKind: pattern.kind)
+                
+                for effectiveRange in effectiveRanges {
+                    let results = regex.matches(in: string, range: effectiveRange)
+                    if results.count == 0 {
+                        continue
+                    }
+                    
+                    let ranges = results.map { $0.range }
+                    for range in ranges {
+                        attributes.append(Attribute(style: style, range: range))
+                        effectiveRanges.removeAll(where: { $0.intersection(range) != nil })
+                    }
+                    
+                    effectiveRanges.append(contentsOf: effectiveRange.subranges(byExcludingRanges: ranges))
+                }
+            }
+        }
 
-                let style = Style.style(forKind: pattern.kind)
+        if options.contains(.singleLine) {
+            for effectiveRange in effectiveRanges {
+                for pattern in language.singleLinePatterns {
+                    guard let regex = try? NSRegularExpression(pattern: pattern.regex, options: .anchorsMatchLines) else {
+                        continue
+                    }
 
-                let results = regex.matches(in: string, range: effectiveRange)
-                for result in results {
-                    attributes.append(Attribute(style: style, range: result.range))
+                    let style = styleSheet.style(forKind: pattern.kind)
+
+                    let results = regex.matches(in: string, range: effectiveRange)
+                    for result in results {
+                        attributes.append(Attribute(style: style, range: result.range))
+                    }
                 }
             }
         }
@@ -81,7 +104,7 @@ public struct DGSyntaxHighlighter {
         return attributes
     }
     
-    public static func language(forIdentifier identifier: Identifier) -> Language? {
+    public static func language(forIdentifier identifier: Identifier) -> Language {
         switch identifier {
         case .markdown: return Markdown()
         case .swift: return Swift()

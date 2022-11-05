@@ -10,7 +10,7 @@ import Foundation
 
 public struct Markdown: Language {
     
-    public var defaultPatterns: [Pattern] {
+    public var singleLinePatterns: [Pattern] {
         return [
             Pattern(name: "plain",
                     kind: .text,
@@ -66,7 +66,7 @@ public struct Markdown: Language {
             ]
     }
     
-    public var exclusivePatterns: [Pattern] {
+    public var multilinePatterns: [Pattern] {
         return [
             Pattern(name: "codeBlock",
                     kind: .string,
