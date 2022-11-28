@@ -20,18 +20,33 @@ public typealias Color = UIColor
 #endif
 
 public struct StyleSheet {
-    public var text = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                            foregroundColor: Color.color(withHex: 0xFFFFFF, alpha: 0.85))
-    public var keyword = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                               foregroundColor: Color.color(withHex: 0xFC5FA3))
-    public var string = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                              foregroundColor: Color.color(withHex: 0xFC6A5D))
-    public var comment = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                               foregroundColor: Color.color(withHex: 0x6C7986))
-    public var emphasis = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                                foregroundColor: Color.color(withHex: 0x5DD8FF))
-    public var link = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                            foregroundColor: Color.color(withHex: 0x5DD8FF))
+    public var text: Style
+    public var keyword: Style
+    public var string: Style
+    public var comment: Style
+    public var emphasis: Style
+    public var link: Style
+
+    init() {
+#if canImport(Cocoa)
+        let textColor = Color.textColor
+#elseif canImport(UIKit)
+        let textColor = Color.label
+#endif
+
+        text = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
+                     foregroundColor: textColor)
+        keyword = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
+                        foregroundColor: Color.color(withHex: 0xFC5FA3))
+        string = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
+                       foregroundColor: Color.color(withHex: 0xFC6A5D))
+        comment = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
+                        foregroundColor: Color.color(withHex: 0x6C7986))
+        emphasis = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
+                         foregroundColor: Color.color(withHex: 0x5DD8FF))
+        link = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
+                     foregroundColor: Color.color(withHex: 0x5DD8FF))
+    }
 }
 
 extension StyleSheet {

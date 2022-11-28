@@ -31,9 +31,7 @@ func lessThanTen(number: Int) -> Bool {
 var numbers = [20, 19, 7, 12]
 hasAnyMatches(list: numbers, condition: lessThanTen)
 """
-        
-        var highlighter = DGSyntaxHighlighter(identifier: .swift)
-        highlighter.styleSheet.text.foregroundColor = .textColor
+        let highlighter = DGSyntaxHighlighter(identifier: .swift)
         let attributedString = highlighter.highlighted(string: text, options: .all)
         textView.textStorage?.setAttributedString(NSAttributedString(attributedString))
     }
