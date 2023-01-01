@@ -32,10 +32,10 @@ public struct DGSyntaxHighlighter {
     
     let language: Language
 
-    let styleSheet: StyleSheet
+    let styleSheet: DGSyntaxHighlighterStyleSheet
 
     public init(identifier: Identifier = .plain,
-                styleSheet: StyleSheet = StyleSheet()) {
+                styleSheet: DGSyntaxHighlighterStyleSheet = DGSyntaxHighlighterStyleSheet()) {
         self.language = Self.language(forIdentifier: identifier)
         self.identifier = identifier
         self.styleSheet = styleSheet

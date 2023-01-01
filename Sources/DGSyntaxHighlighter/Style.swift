@@ -19,7 +19,7 @@ public typealias Font = UIFont
 public typealias Color = UIColor
 #endif
 
-public struct StyleSheet {
+public struct DGSyntaxHighlighterStyleSheet {
     public var text: Style
     public var keyword: Style
     public var string: Style
@@ -33,23 +33,16 @@ public struct StyleSheet {
 #elseif canImport(UIKit)
         let textColor = Color.label
 #endif
-
-        text = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                     foregroundColor: textColor)
-        keyword = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                        foregroundColor: Color.color(withHex: 0xFC5FA3))
-        string = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                       foregroundColor: Color.color(withHex: 0xFC6A5D))
-        comment = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                        foregroundColor: Color.color(withHex: 0x6C7986))
-        emphasis = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                         foregroundColor: Color.color(withHex: 0x5DD8FF))
-        link = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular),
-                     foregroundColor: Color.color(withHex: 0x5DD8FF))
+        text = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: textColor)
+        keyword = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0xFC5FA3))
+        string = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0xFC6A5D))
+        comment = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0x6C7986))
+        emphasis = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0x5DD8FF))
+        link = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0x5DD8FF))
     }
 }
 
-extension StyleSheet {
+extension DGSyntaxHighlighterStyleSheet {
     public func style(forKind kind: Kind) -> Style {
         switch kind {
         case .text: return text
@@ -65,4 +58,9 @@ extension StyleSheet {
 public struct Style {
     public var font: Font?
     public var foregroundColor: Color?
+    public init(font: Font?, foregroundColor: Color?) {
+        self.font = font
+        self.foregroundColor = foregroundColor
+    }
 }
+
