@@ -27,7 +27,7 @@ public struct StyleSheet {
     public var emphasis: Style
     public var link: Style
 
-    init() {
+    public init() {
 #if canImport(Cocoa)
         let textColor = Color.textColor
 #elseif canImport(UIKit)

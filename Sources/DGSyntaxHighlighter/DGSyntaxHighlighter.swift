@@ -23,20 +23,22 @@ public struct DGSyntaxHighlighter {
 
         public init(rawValue: Int) { self.rawValue = rawValue }
         
-        public static let singleLine = Options(rawValue: 1 << 0)
+        public static let inline = Options(rawValue: 1 << 0)
         public static let multiline = Options(rawValue: 1 << 1)
-        public static let all: Options = [.singleLine, .multiline]
+        public static let all: Options = [.inline, .multiline]
     }
     
     let identifier: Identifier
     
     let language: Language
 
-    public var styleSheet = StyleSheet()
+    let styleSheet: StyleSheet
 
-    public init(identifier: Identifier) {
+    public init(identifier: Identifier = .plain,
+                styleSheet: StyleSheet = StyleSheet()) {
         self.language = Self.language(forIdentifier: identifier)
         self.identifier = identifier
+        self.styleSheet = styleSheet
     }
     
     public struct Attribute {
@@ -84,9 +86,9 @@ public struct DGSyntaxHighlighter {
             }
         }
 
-        if options.contains(.singleLine) {
+        if options.contains(.inline) {
             for effectiveRange in effectiveRanges {
-                for pattern in language.singleLinePatterns {
+                for pattern in language.inlinePatterns {
                     guard let regex = try? NSRegularExpression(pattern: pattern.regex, options: .anchorsMatchLines) else {
                         continue
                     }
