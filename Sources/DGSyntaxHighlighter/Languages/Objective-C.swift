@@ -9,13 +9,9 @@
 import Foundation
 
 public struct ObjectiveC: Language {
-    
+
     public var inlinePatterns: [Pattern] {
         return [
-            Pattern(name: "plain",
-                    kind: .text,
-                    regex: ".*"),
-            
             Pattern(name: "framework",
                     kind: .emphasis,
                     regex: "\\b(AV|CA|CF|CG|CI|CL|CM|CN|CT|MK|MP|MTK|MTL|NS|SCN|SK|UI|WK|XC)\\w+"),

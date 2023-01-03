@@ -22,10 +22,11 @@ public struct DGSyntaxHighlighter {
         public let rawValue: Int
 
         public init(rawValue: Int) { self.rawValue = rawValue }
-        
-        public static let inline = Options(rawValue: 1 << 0)
-        public static let multiline = Options(rawValue: 1 << 1)
-        public static let all: Options = [.inline, .multiline]
+
+        public static let plain = Options(rawValue: 1 << 0)
+        public static let inline = Options(rawValue: 1 << 1)
+        public static let multiline = Options(rawValue: 1 << 2)
+        public static let all: Options = [.plain, .inline, .multiline]
     }
     
     let identifier: Identifier
@@ -58,6 +59,11 @@ public struct DGSyntaxHighlighter {
     
     public func highlight(string: String, range: NSRange, options: Options) -> [Attribute]? {
         var attributes = [Attribute]()
+
+        if options.contains(.plain) {
+            let style = styleSheet.style(forKind: .text)
+            attributes.append(Attribute(style: style, range: range))
+        }
 
         var effectiveRanges: [NSRange] = [range]
 

@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol Language {
-
+    
     var inlinePatterns: [Pattern] { get }
     
     var multilinePatterns: [Pattern] { get }

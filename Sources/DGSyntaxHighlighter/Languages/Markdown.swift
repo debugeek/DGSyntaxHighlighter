@@ -9,13 +9,9 @@
 import Foundation
 
 public struct Markdown: Language {
-    
+
     public var inlinePatterns: [Pattern] {
         return [
-            Pattern(name: "plain",
-                    kind: .text,
-                    regex: ".*"),
-            
             Pattern(name: "heading",
                     kind: .emphasis,
                     regex: "^\\#{1,6}[\\t\\ ].+$"),

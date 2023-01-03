@@ -9,13 +9,9 @@
 import Foundation
 
 public struct Plain: Language {
-    
+
     public var inlinePatterns: [Pattern] {
-        return [
-            Pattern(name: "plain",
-                    kind: .text,
-                    regex: ".*")
-        ]
+        return []
     }
     
     public var multilinePatterns: [Pattern] {
