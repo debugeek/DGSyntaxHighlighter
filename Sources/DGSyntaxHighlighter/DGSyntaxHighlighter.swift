@@ -16,6 +16,7 @@ public struct DGSyntaxHighlighter {
         case markdown = "markdown"
         case swift = "swift"
         case oc = "objective-c"
+        case shell = "shell"
     }
 
     public struct Options: OptionSet {
@@ -117,6 +118,7 @@ public struct DGSyntaxHighlighter {
         case .markdown: return Markdown()
         case .swift: return Swift()
         case .oc: return ObjectiveC()
+        case .shell: return Shell()
         default: return Plain()
         }
     }
