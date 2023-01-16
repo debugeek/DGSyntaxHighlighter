@@ -40,9 +40,9 @@ public struct ObjectiveC: Language {
     
     public var multilinePatterns: [Pattern] {
         return [
-            Pattern(name: "stringBlock",
-                    kind: .string,
-                    regex: "\\\"\\\"\\\"[\\s\\S]*?\\\"\\\"\\\"")
+            Pattern(name: "commentBlock",
+                    kind: .comment,
+                    regex: "/\\*[\\s\\S]*?\\*/")
         ]
     }
     

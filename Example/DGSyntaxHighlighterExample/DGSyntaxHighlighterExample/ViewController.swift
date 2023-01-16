@@ -9,39 +9,22 @@
 import Cocoa
 import DGSyntaxHighlighter
 
-class ViewController: NSViewController {
+class ViewController: NSViewController, NSTextViewDelegate {
 
     @IBOutlet var textView: NSTextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        let text = """
-func hasAnyMatches(list: [Int], condition: (Int) -> Bool) -> Bool {
-    for item in list {
-        if condition(item) {
-            return true
-        }
+        textView.delegate = self
+        textView.layoutManager?.allowsNonContiguousLayout = true
     }
-    return false
-}
-func lessThanTen(number: Int) -> Bool {
-    return number < 10
-}
-var numbers = [20, 19, 7, 12]
-hasAnyMatches(list: numbers, condition: lessThanTen)
-"""
-        let highlighter = DGSyntaxHighlighter(identifier: .swift)
+    
+    func textDidChange(_ noti: Notification) {
+        let text = textView.string
+        let highlighter = DGSyntaxHighlighter(identifier: .markdown)
         let attributedString = highlighter.highlighted(string: text, options: .all)
         textView.textStorage?.setAttributedString(NSAttributedString(attributedString))
     }
-
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
-        }
-    }
-
 
 }
 

@@ -27,15 +27,18 @@ public struct Shell: Language {
             Pattern(name: "bashBuiltinKeywords",
                     kind: .keyword,
                     regex: "\\b(alias|bind|builtin|caller|command|declare|echo|enable|help|let|local|logout|mapfile|printf|read|readarray|source|type|typeset|ulimit|unalias)\\b"),
-
+            
+            Pattern(name: "variable",
+                    kind: .emphasis,
+                    regex: "\\$[\\w\\d]*"),
+            
             Pattern(name: "string",
                     kind: .string,
-                    regex: "\".*\""),
-
+                    regex: "(\"|').*\\1"),
+            
             Pattern(name: "commentLine",
                     kind: .comment,
                     regex: "#.*"),
-
             ]
     }
 

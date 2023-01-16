@@ -46,7 +46,7 @@ public struct Swift: Language {
         return [
             Pattern(name: "stringBlock",
                     kind: .string,
-                    regex: "\\\"\\\"\\\"[\\s\\S]*?\\\"\\\"\\\""),
+                    regex: "(\\\"{3})(?!\\\")[\\s\\S]*?\\1"),
             
             Pattern(name: "commentBlock",
                     kind: .comment,

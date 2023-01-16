@@ -14,51 +14,23 @@ public struct Markdown: Language {
         return [
             Pattern(name: "heading",
                     kind: .emphasis,
-                    regex: "^\\#{1,6}[\\t\\ ].+$"),
+                    regex: "^\\#{1,6}.+"),
         
-            Pattern(name: "bold",
+            Pattern(name: "emphasis",
                     kind: .emphasis,
-                    regex: "\\*\\*(?!\\*).+?\\*\\*"),
-            
-            Pattern(name: "bold",
-                    kind: .emphasis,
-                    regex: "\\_\\_(?!\\_).+?\\_\\_"),
-            
-            Pattern(name: "italic",
-                    kind: .emphasis,
-                    regex: "\\ \\*(?!\\*).+?\\*\\ "),
-            
-            Pattern(name: "italic",
-                    kind: .emphasis,
-                    regex: "\\ \\_(?!\\_).+?\\_\\ "),
-            
-            Pattern(name: "strikethrough",
-                    kind: .emphasis,
-                    regex: "\\~\\~(?!\\~).+?\\~\\~"),
+                    regex: "\\B(\\*{1,2}|\\_{1,2}|\\~{1,2})(?!\\1).+?\\1\\B"),
 
             Pattern(name: "list",
                     kind: .keyword,
-                    regex: "^\\d\\.[\\t\\ ]"),
+                    regex: "^\\s*(\\d\\.|\\*|\\-|\\+)\\s+?"),
 
-            Pattern(name: "list",
-                    kind: .keyword,
-                    regex: "^[\\t\\ ]*[\\*\\+\\-][\\t\\ ]+"),
-
-            Pattern(name: "list",
-                    kind: .keyword,
-                    regex: "^\\-\\ \\[[x\\ ]\\][\\t\\ ]"),
-
-            Pattern(name: "image",
-                    kind: .link,
-                    regex: "!\\[(.*)\\]\\((.+)\\)"),
-            
             Pattern(name: "link",
                     kind: .link,
-                    regex: "\\[(.*)\\]\\((.+)\\)"),
+                    regex: "\\!?\\[.*\\]\\(.+\\)"),
             
             Pattern(name: "inlineCode",
                     kind: .string,
-                    regex: "\\`(?!\\`)(.+?)\\`")
+                    regex: "\\`.+?\\`")
             ]
     }
     
@@ -66,7 +38,7 @@ public struct Markdown: Language {
         return [
             Pattern(name: "codeBlock",
                     kind: .string,
-                    regex: "^\\`\\`\\`(?!\\`)\\S*\\n[\\s\\S]*?\\n\\`\\`\\`$")
+                    regex: "^(\\`{3})(?!\\`)[\\s\\S]*?^\\1$")
         ]
     }
     

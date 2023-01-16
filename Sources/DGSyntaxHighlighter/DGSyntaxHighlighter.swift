@@ -77,12 +77,11 @@ public struct DGSyntaxHighlighter {
                 let style = styleSheet.style(forKind: pattern.kind)
                 
                 for effectiveRange in effectiveRanges {
-                    let results = regex.matches(in: string, range: effectiveRange)
-                    if results.count == 0 {
+                    let ranges = regex.matches(in: string, range: effectiveRange).map { $0.range }
+                    if ranges.count == 0 {
                         continue
                     }
                     
-                    let ranges = results.map { $0.range }
                     for range in ranges {
                         attributes.append(Attribute(style: style, range: range))
                         effectiveRanges.removeAll(where: { $0.intersection(range) != nil })
@@ -102,9 +101,9 @@ public struct DGSyntaxHighlighter {
 
                     let style = styleSheet.style(forKind: pattern.kind)
 
-                    let results = regex.matches(in: string, range: effectiveRange)
-                    for result in results {
-                        attributes.append(Attribute(style: style, range: result.range))
+                    let ranges = regex.matches(in: string, range: effectiveRange).map { $0.range }
+                    for range in ranges {
+                        attributes.append(Attribute(style: style, range: range))
                     }
                 }
             }
