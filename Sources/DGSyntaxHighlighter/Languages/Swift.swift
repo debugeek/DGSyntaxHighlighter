@@ -32,22 +32,26 @@ public struct Swift: Language {
                     kind: .keyword,
                     regex: "@(autoclosure|convention|discardableResult|dynamicCallable|dynamicMemberLookup|escaping|frozen|GKInspectable|IBAction|IBDesignable|IBInspectable|IBOutlet|IBSegueAction|inlinable|main|nonobjc|NSApplicationMain|NSCopying|NSManaged|objc|objc|objcMembers|propertyWrapper|requires_stored_property_inits|resultBuilder|testable|UIApplicationMain|unknown|usableFromInline)\\b"),
             
-            Pattern(name: "strings",
+            Pattern(name: "string",
                     kind: .string,
-                    regex: "(\".*\")"),
+                    regex: "\".*\""),
             
             Pattern(name: "commentLine",
                     kind: .comment,
-                    regex: "(//.*)"),
-            
-            Pattern(name: "commentBlock",
-                    kind: .comment,
-                    regex: "(/\\*.*?\\*/)")
+                    regex: "//.*")
             ]
     }
     
     public var multilinePatterns: [Pattern] {
-        return []
+        return [
+            Pattern(name: "stringBlock",
+                    kind: .string,
+                    regex: "\\\"\\\"\\\"[\\s\\S]*?\\\"\\\"\\\""),
+            
+            Pattern(name: "commentBlock",
+                    kind: .comment,
+                    regex: "/\\*[\\s\\S]*?\\*/")
+        ]
     }
     
 }

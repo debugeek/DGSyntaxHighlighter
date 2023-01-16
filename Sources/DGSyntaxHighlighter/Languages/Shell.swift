@@ -23,18 +23,18 @@ public struct Shell: Language {
             Pattern(name: "shellBuiltinKeywords",
                     kind: .keyword,
                     regex: "\\b(break|cd|continue|eval|exec|exit|export|getopts|hash|pwd|readonly|return|shift|test|times|trap|umask|unsed)\\b"),
-
+            
             Pattern(name: "bashBuiltinKeywords",
                     kind: .keyword,
                     regex: "\\b(alias|bind|builtin|caller|command|declare|echo|enable|help|let|local|logout|mapfile|printf|read|readarray|source|type|typeset|ulimit|unalias)\\b"),
 
-            Pattern(name: "strings",
+            Pattern(name: "string",
                     kind: .string,
-                    regex: "(\".*\")"),
+                    regex: "\".*\""),
 
             Pattern(name: "commentLine",
                     kind: .comment,
-                    regex: "(#.*)"),
+                    regex: "#.*"),
 
             ]
     }

@@ -28,22 +28,22 @@ public struct ObjectiveC: Language {
                     kind: .emphasis,
                     regex: "\\b(false|true|FALSE|TRUE|nil|YES|NO|NULL)\\b"),
             
-            Pattern(name: "strings",
+            Pattern(name: "string",
                     kind: .string,
-                    regex: "(\".*\")"),
+                    regex: "\".*\""),
             
             Pattern(name: "commentLine",
                     kind: .comment,
-                    regex: "(//.*)"),
-            
-            Pattern(name: "commentBlock",
-                    kind: .comment,
-                    regex: "(/\\*.*?\\*/)")
+                    regex: "//.*")
             ]
     }
     
     public var multilinePatterns: [Pattern] {
-        return []
+        return [
+            Pattern(name: "stringBlock",
+                    kind: .string,
+                    regex: "\\\"\\\"\\\"[\\s\\S]*?\\\"\\\"\\\"")
+        ]
     }
     
 }
