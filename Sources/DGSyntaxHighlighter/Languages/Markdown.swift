@@ -30,7 +30,7 @@ public struct Markdown: Language {
             
             Pattern(name: "inlineCode",
                     kind: .string,
-                    regex: "\\`.+?\\`")
+                    regex: "\\`(?!\\`).+?\\`")
             ]
     }
     
