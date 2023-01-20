@@ -14,7 +14,7 @@ public struct Markdown: Language {
         return [
             Pattern(name: "heading",
                     kind: .emphasis,
-                    regex: "^\\#{1,6}(?!\\#).+"),
+                    regex: "^\\#{1,6}(?!\\#).*"),
         
             Pattern(name: "emphasis",
                     kind: .emphasis,
