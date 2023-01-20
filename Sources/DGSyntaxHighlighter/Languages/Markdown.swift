@@ -14,11 +14,11 @@ public struct Markdown: Language {
         return [
             Pattern(name: "heading",
                     kind: .emphasis,
-                    regex: "^\\#{1,6}.+"),
+                    regex: "^\\#{1,6}(?!\\#).+"),
         
             Pattern(name: "emphasis",
                     kind: .emphasis,
-                    regex: "\\B(\\*{1,2}|\\_{1,2}|\\~{1,2})(?!\\1).+?\\1\\B"),
+                    regex: "\\b(\\*{1,2}|\\_{1,2}|\\~{1,2})(?!\\1).+?\\1\\b"),
 
             Pattern(name: "list",
                     kind: .keyword,
