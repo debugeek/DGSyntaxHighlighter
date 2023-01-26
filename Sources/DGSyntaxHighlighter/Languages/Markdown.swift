@@ -10,35 +10,38 @@ import Foundation
 
 public struct Markdown: Language {
 
-    public var inlinePatterns: [Pattern] {
+    public var inlineRules: [SyntaxRule] {
         return [
-            Pattern(name: "heading",
-                    kind: .emphasis,
-                    regex: "^\\#{1,6}(?!\\#).*"),
+            SyntaxRule(name: "heading",
+                       kind: .emphasis,
+                       patterns: ["^\\#{1,6}(?!\\#).*"]),
         
-            Pattern(name: "emphasis",
-                    kind: .emphasis,
-                    regex: "\\b(\\*{1,2}|\\_{1,2}|\\~{1,2})(?!\\1).+?\\1\\b"),
+            SyntaxRule(name: "emphasis",
+                       kind: .emphasis,
+                       patterns: ["(\\*{1,2}).+?\\1",
+                                  "\\b(\\_{1,2}).+?\\1\\b",
+                                  "(\\~{1,2}).+?\\1"]),
 
-            Pattern(name: "list",
-                    kind: .keyword,
-                    regex: "^\\s*(\\d\\.|\\*|\\-|\\+)\\s+?"),
+            SyntaxRule(name: "listItem",
+                       kind: .keyword,
+                       patterns: ["^\\s*(\\d\\.|\\*|\\-|\\+)\\s+"]),
 
-            Pattern(name: "link",
-                    kind: .link,
-                    regex: "\\!?\\[.*\\]\\(.+\\)"),
+            SyntaxRule(name: "link",
+                       kind: .link,
+                       patterns: ["\\!?\\[.*\\]\\(.*\\)"]),
             
-            Pattern(name: "inlineCode",
-                    kind: .string,
-                    regex: "\\`(?!\\`).+?\\`")
-            ]
+            SyntaxRule(name: "inlineCode",
+                       kind: .string,
+                       patterns: ["\\`.+?\\`"])
+        ]
     }
     
-    public var multilinePatterns: [Pattern] {
+    public var multilineRules: [SyntaxRule] {
         return [
-            Pattern(name: "codeBlock",
-                    kind: .string,
-                    regex: "^(\\`{3})(?!\\`)[\\s\\S]*?^\\1$")
+            SyntaxRule(name: "codeBlock",
+                       kind: .string,
+                       patterns: ["^\\ {0,3}(\\`{3,})[^\\`][\\s\\S]*?^\\ *\\1\\`*\\s*?$",
+                                  "^\\ {0,3}(\\`{3,})[^\\`]*[\\s\\S]*"])
         ]
     }
     

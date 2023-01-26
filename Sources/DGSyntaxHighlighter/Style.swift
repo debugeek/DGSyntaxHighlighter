@@ -43,7 +43,7 @@ public struct DGSyntaxHighlighterStyleSheet {
 }
 
 extension DGSyntaxHighlighterStyleSheet {
-    public func style(forKind kind: Kind) -> Style {
+    public func style(forKind kind: SyntaxRule.Kind) -> Style {
         switch kind {
         case .text: return text
         case .keyword: return keyword

@@ -69,41 +69,37 @@ public struct DGSyntaxHighlighter {
         var effectiveRanges: [NSRange] = [range]
 
         if options.contains(.multiline) {
-            for pattern in language.multilinePatterns {
-                guard let regex = try? NSRegularExpression(pattern: pattern.regex, options: .anchorsMatchLines) else {
-                    continue
-                }
-                
-                let style = styleSheet.style(forKind: pattern.kind)
-                
-                for effectiveRange in effectiveRanges {
-                    let ranges = regex.matches(in: string, range: effectiveRange).map { $0.range }
-                    if ranges.count == 0 {
-                        continue
+            for rule in language.multilineRules {
+                let style = styleSheet.style(forKind: rule.kind)
+                for pattern in rule.patterns {
+                    guard let regex = try? NSRegularExpression(pattern: pattern, options: .anchorsMatchLines) else { continue }
+                    for effectiveRange in effectiveRanges {
+                        let ranges = regex.matches(in: string, range: effectiveRange).map { $0.range }
+                        if ranges.count == 0 {
+                            continue
+                        }
+                        
+                        for range in ranges {
+                            attributes.append(Attribute(style: style, range: range))
+                            effectiveRanges.removeAll(where: { $0.intersection(range) != nil })
+                        }
+                        
+                        effectiveRanges.append(contentsOf: effectiveRange.subranges(byExcludingRanges: ranges))
                     }
-                    
-                    for range in ranges {
-                        attributes.append(Attribute(style: style, range: range))
-                        effectiveRanges.removeAll(where: { $0.intersection(range) != nil })
-                    }
-                    
-                    effectiveRanges.append(contentsOf: effectiveRange.subranges(byExcludingRanges: ranges))
                 }
             }
         }
 
         if options.contains(.inline) {
             for effectiveRange in effectiveRanges {
-                for pattern in language.inlinePatterns {
-                    guard let regex = try? NSRegularExpression(pattern: pattern.regex, options: .anchorsMatchLines) else {
-                        continue
-                    }
-
-                    let style = styleSheet.style(forKind: pattern.kind)
-
-                    let ranges = regex.matches(in: string, range: effectiveRange).map { $0.range }
-                    for range in ranges {
-                        attributes.append(Attribute(style: style, range: range))
+                for rule in language.inlineRules {
+                    let style = styleSheet.style(forKind: rule.kind)
+                    for pattern in rule.patterns {
+                        guard let regex = try? NSRegularExpression(pattern: pattern, options: .anchorsMatchLines) else { continue }
+                        let ranges = regex.matches(in: string, range: effectiveRange).map { $0.range }
+                        for range in ranges {
+                            attributes.append(Attribute(style: style, range: range))
+                        }
                     }
                 }
             }
