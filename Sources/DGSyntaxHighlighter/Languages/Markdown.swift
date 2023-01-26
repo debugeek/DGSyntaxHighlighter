@@ -14,17 +14,16 @@ public struct Markdown: Language {
         return [
             SyntaxRule(name: "heading",
                        kind: .emphasis,
-                       patterns: ["^\\#{1,6}(?!\\#).*"]),
+                       patterns: ["^\\#{1,6}[^\\S\\n].*"]),
         
             SyntaxRule(name: "emphasis",
                        kind: .emphasis,
-                       patterns: ["(\\*{1,2}).+?\\1",
-                                  "\\b(\\_{1,2}).+?\\1\\b",
-                                  "(\\~{1,2}).+?\\1"]),
+                       patterns: ["(\\*{1,2}|\\~{1,2}).+?\\1",
+                                  "\\b(\\_{1,2}).+?\\1\\b"]),
 
             SyntaxRule(name: "listItem",
                        kind: .keyword,
-                       patterns: ["^\\s*(\\d\\.|\\*|\\-|\\+)\\s+"]),
+                       patterns: ["^[^\\S\\n]*(\\d\\.|\\*|\\-|\\+)[^\\S\\n]"]),
 
             SyntaxRule(name: "link",
                        kind: .link,
@@ -40,8 +39,7 @@ public struct Markdown: Language {
         return [
             SyntaxRule(name: "codeBlock",
                        kind: .string,
-                       patterns: ["^\\ {0,3}(\\`{3,})[^\\`][\\s\\S]*?^\\ *\\1\\`*\\s*?$",
-                                  "^\\ {0,3}(\\`{3,})[^\\`]*[\\s\\S]*"])
+                       patterns: ["^(\\`{3,})([\\s\\S]*?^[^\\S\\n]*\\1\\`*\\s*?$|[\\s\\S]*)"])
         ]
     }
     
