@@ -1,5 +1,5 @@
 //
-//  SyntaxRule.swift
+//  SyntaxDescriptor.swift
 //  DGSyntaxHighlighter
 //
 //  Created by Xiao Jin on 2022/9/14.
@@ -9,6 +9,15 @@
 import Foundation
 
 public struct SyntaxRule {
+    let pattern: String
+    let anchorsMatchLines: Bool
+    public init(pattern: String, anchorsMatchLines: Bool = false) {
+        self.pattern = pattern
+        self.anchorsMatchLines = anchorsMatchLines
+    }
+}
+
+public struct SyntaxDescriptor {
     
     public enum Kind {
         case text
@@ -21,6 +30,6 @@ public struct SyntaxRule {
     
     public let name: String
     public let kind: Kind
-    public let patterns: [String]
+    public let rules: [SyntaxRule]
     
 }

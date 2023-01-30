@@ -10,36 +10,48 @@ import Foundation
 
 public struct Markdown: Language {
 
-    public var inlineRules: [SyntaxRule] {
+    public var inlineDescriptors: [SyntaxDescriptor] {
         return [
-            SyntaxRule(name: "heading",
-                       kind: .emphasis,
-                       patterns: ["^\\#{1,6}[^\\S\\n].*"]),
+            SyntaxDescriptor(name: "heading",
+                             kind: .emphasis,
+                             rules: [
+                                SyntaxRule(pattern: "^\\#{1,6}[^\\S\\n].*", anchorsMatchLines: true)
+                             ]),
         
-            SyntaxRule(name: "emphasis",
-                       kind: .emphasis,
-                       patterns: ["(\\*{1,2}|\\~{1,2}).+?\\1",
-                                  "\\b(\\_{1,2}).+?\\1\\b"]),
+            SyntaxDescriptor(name: "emphasis",
+                             kind: .emphasis,
+                             rules: [
+                                SyntaxRule(pattern: "(\\*{1,2}|\\~{1,2}).+?\\1"),
+                                SyntaxRule(pattern: "\\b(\\_{1,2}).+?\\1\\b")
+                             ]),
 
-            SyntaxRule(name: "listItem",
-                       kind: .keyword,
-                       patterns: ["^[^\\S\\n]*(\\d\\.|\\*|\\-|\\+)[^\\S\\n]"]),
+            SyntaxDescriptor(name: "listItem",
+                             kind: .keyword,
+                             rules: [
+                                SyntaxRule(pattern: "^[^\\S\\n]*(\\d\\.|\\*|\\-|\\+)[^\\S\\n]", anchorsMatchLines: true)
+                             ]),
 
-            SyntaxRule(name: "link",
-                       kind: .link,
-                       patterns: ["\\!?\\[.*\\]\\(.*\\)"]),
+            SyntaxDescriptor(name: "link",
+                             kind: .link,
+                             rules: [
+                                SyntaxRule(pattern: "\\!?\\[.*\\]\\(.*\\)"),
+                             ]),
             
-            SyntaxRule(name: "inlineCode",
-                       kind: .string,
-                       patterns: ["\\`.+?\\`"])
+            SyntaxDescriptor(name: "inlineCode",
+                             kind: .string,
+                             rules: [
+                                SyntaxRule(pattern: "\\`.+?\\`"),
+                             ])
         ]
     }
     
-    public var multilineRules: [SyntaxRule] {
+    public var multilineDescriptors: [SyntaxDescriptor] {
         return [
-            SyntaxRule(name: "codeBlock",
-                       kind: .string,
-                       patterns: ["^(\\`{3,})([\\s\\S]*?^[^\\S\\n]*\\1\\`*\\s*?$|[\\s\\S]*)"])
+            SyntaxDescriptor(name: "codeBlock",
+                             kind: .string,
+                             rules: [
+                                SyntaxRule(pattern: "^(\\`{3,})([\\s\\S]*?^[^\\S\\n]*\\1\\`*\\s*?$|[\\s\\S]*)", anchorsMatchLines: true),
+                             ])
         ]
     }
     

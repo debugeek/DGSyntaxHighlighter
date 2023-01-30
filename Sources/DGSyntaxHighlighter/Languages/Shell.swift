@@ -10,39 +10,53 @@ import Foundation
 
 public struct Shell: Language {
 
-    public var inlineRules: [SyntaxRule] {
+    public var inlineDescriptors: [SyntaxDescriptor] {
         return [
-            SyntaxRule(name: "keywords",
-                       kind: .keyword,
-                       patterns: ["\\b(if|then|else|elif|fi|for|while|in|do|done|case|esac|function)\\b"]),
+            SyntaxDescriptor(name: "keywords",
+                             kind: .keyword,
+                             rules: [
+                                SyntaxRule(pattern: "\\b(if|then|else|elif|fi|for|while|in|do|done|case|esac|function)\\b")
+                             ]),
 
-            SyntaxRule(name: "literals",
-                       kind: .keyword,
-                       patterns: ["\\b(true|false)\\b"]),
+            SyntaxDescriptor(name: "literals",
+                             kind: .keyword,
+                             rules: [
+                                SyntaxRule(pattern: "\\b(true|false)\\b")
+                             ]),
 
-            SyntaxRule(name: "shellBuiltinKeywords",
-                       kind: .keyword,
-                       patterns: ["\\b(break|cd|continue|eval|exec|exit|export|getopts|hash|pwd|readonly|return|shift|test|times|trap|umask|unsed)\\b"]),
+            SyntaxDescriptor(name: "shellBuiltinKeywords",
+                             kind: .keyword,
+                             rules: [
+                                SyntaxRule(pattern: "\\b(break|cd|continue|eval|exec|exit|export|getopts|hash|pwd|readonly|return|shift|test|times|trap|umask|unsed)\\b")
+                             ]),
             
-            SyntaxRule(name: "bashBuiltinKeywords",
-                       kind: .keyword,
-                       patterns: ["\\b(alias|bind|builtin|caller|command|declare|echo|enable|help|let|local|logout|mapfile|printf|read|readarray|source|type|typeset|ulimit|unalias)\\b"]),
+            SyntaxDescriptor(name: "bashBuiltinKeywords",
+                             kind: .keyword,
+                             rules: [
+                                SyntaxRule(pattern: "\\b(alias|bind|builtin|caller|command|declare|echo|enable|help|let|local|logout|mapfile|printf|read|readarray|source|type|typeset|ulimit|unalias)\\b")
+                             ]),
             
-            SyntaxRule(name: "variable",
-                       kind: .emphasis,
-                       patterns: ["\\$[\\w\\d]*"]),
+            SyntaxDescriptor(name: "variable",
+                             kind: .emphasis,
+                             rules: [
+                                SyntaxRule(pattern: "\\$[\\w\\d]*")
+                             ]),
             
-            SyntaxRule(name: "string",
-                       kind: .string,
-                       patterns: ["(\"|').*\\1"]),
+            SyntaxDescriptor(name: "string",
+                             kind: .string,
+                             rules: [
+                                SyntaxRule(pattern: "(\"|').*\\1")
+                             ]),
             
-            SyntaxRule(name: "commentLine",
-                       kind: .comment,
-                       patterns: ["#.*"]),
+            SyntaxDescriptor(name: "commentLine",
+                             kind: .comment,
+                             rules: [
+                                SyntaxRule(pattern: "#.*")
+                             ])
             ]
     }
 
-    public var multilineRules: [SyntaxRule] {
+    public var multilineDescriptors: [SyntaxDescriptor] {
         return []
     }
 

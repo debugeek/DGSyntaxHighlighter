@@ -10,8 +10,8 @@ import Foundation
 
 public protocol Language {
     
-    var inlineRules: [SyntaxRule] { get }
+    var inlineDescriptors: [SyntaxDescriptor] { get }
     
-    var multilineRules: [SyntaxRule] { get }
+    var multilineDescriptors: [SyntaxDescriptor] { get }
     
 }

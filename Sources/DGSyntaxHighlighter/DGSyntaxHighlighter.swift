@@ -48,12 +48,10 @@ public struct DGSyntaxHighlighter {
         public let range: NSRange
     }
     
-    public func highlighted(string: String, options: Options) -> AttributedString {
-        var attributedString = AttributedString(string)
-        highlight(string: string, range: NSMakeRange(0, (string as NSString).length), options: options)?.forEach {
-            guard let range = Range($0.range, in: attributedString) else { return }
-            attributedString[range].font = $0.style.font
-            attributedString[range].foregroundColor = $0.style.foregroundColor
+    public func highlighted(string: String, options: Options) -> NSAttributedString {
+        let attributedString = NSMutableAttributedString(string: string)
+        highlight(string: string, range: NSMakeRange(0, string.utf16.count), options: options)?.forEach {
+            attributedString.addAttributes([.font: $0.style.font as Any, .foregroundColor: $0.style.foregroundColor as Any], range: $0.range)
         }
         return attributedString
     }
@@ -69,10 +67,10 @@ public struct DGSyntaxHighlighter {
         var effectiveRanges: [NSRange] = [range]
 
         if options.contains(.multiline) {
-            for rule in language.multilineRules {
-                let style = styleSheet.style(forKind: rule.kind)
-                for pattern in rule.patterns {
-                    guard let regex = try? NSRegularExpression(pattern: pattern, options: .anchorsMatchLines) else { continue }
+            for descriptor in language.multilineDescriptors {
+                let style = styleSheet.style(forKind: descriptor.kind)
+                for rule in descriptor.rules {
+                    guard let regex = rule.anchorsMatchLines ? try? NSRegularExpression(pattern: rule.pattern, options: .anchorsMatchLines) : try? NSRegularExpression(pattern: rule.pattern) else { continue }
                     for effectiveRange in effectiveRanges {
                         let ranges = regex.matches(in: string, range: effectiveRange).map { $0.range }
                         if ranges.count == 0 {
@@ -92,10 +90,10 @@ public struct DGSyntaxHighlighter {
 
         if options.contains(.inline) {
             for effectiveRange in effectiveRanges {
-                for rule in language.inlineRules {
-                    let style = styleSheet.style(forKind: rule.kind)
-                    for pattern in rule.patterns {
-                        guard let regex = try? NSRegularExpression(pattern: pattern, options: .anchorsMatchLines) else { continue }
+                for descriptor in language.inlineDescriptors {
+                    let style = styleSheet.style(forKind: descriptor.kind)
+                    for rule in descriptor.rules {
+                        guard let regex = rule.anchorsMatchLines ? try? NSRegularExpression(pattern: rule.pattern, options: .anchorsMatchLines) : try? NSRegularExpression(pattern: rule.pattern) else { continue }
                         let ranges = regex.matches(in: string, range: effectiveRange).map { $0.range }
                         for range in ranges {
                             attributes.append(Attribute(style: style, range: range))

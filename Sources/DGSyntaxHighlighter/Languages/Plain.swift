@@ -10,11 +10,11 @@ import Foundation
 
 public struct Plain: Language {
 
-    public var inlineRules: [SyntaxRule] {
+    public var inlineDescriptors: [SyntaxDescriptor] {
         return []
     }
     
-    public var multilineRules: [SyntaxRule] {
+    public var multilineDescriptors: [SyntaxDescriptor] {
         return []
     }
     

@@ -23,7 +23,7 @@ class ViewController: NSViewController, NSTextViewDelegate {
         let text = textView.string
         let highlighter = DGSyntaxHighlighter(identifier: .markdown)
         let attributedString = highlighter.highlighted(string: text, options: .all)
-        textView.textStorage?.setAttributedString(NSAttributedString(attributedString))
+        textView.textStorage?.setAttributedString(attributedString)
     }
 
 }
