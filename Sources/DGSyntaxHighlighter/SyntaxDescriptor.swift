@@ -11,9 +11,15 @@ import Foundation
 public struct SyntaxRule {
     let pattern: String
     let anchorsMatchLines: Bool
+    let regex: NSRegularExpression?
     public init(pattern: String, anchorsMatchLines: Bool = false) {
         self.pattern = pattern
         self.anchorsMatchLines = anchorsMatchLines
+        self.regex = anchorsMatchLines ? try? NSRegularExpression(pattern: pattern, options: .anchorsMatchLines) : try? NSRegularExpression(pattern: pattern)
+    }
+    
+    public func matches(in string: String, range: NSRange) -> [NSRange] {
+        return regex?.matches(in: string, range: range).map { $0.range } ?? []
     }
 }
 

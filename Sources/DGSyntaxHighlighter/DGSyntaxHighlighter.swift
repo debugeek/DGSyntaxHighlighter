@@ -70,12 +70,9 @@ public struct DGSyntaxHighlighter {
             for descriptor in language.multilineDescriptors {
                 let style = styleSheet.style(forKind: descriptor.kind)
                 for rule in descriptor.rules {
-                    guard let regex = rule.anchorsMatchLines ? try? NSRegularExpression(pattern: rule.pattern, options: .anchorsMatchLines) : try? NSRegularExpression(pattern: rule.pattern) else { continue }
                     for effectiveRange in effectiveRanges {
-                        let ranges = regex.matches(in: string, range: effectiveRange).map { $0.range }
-                        if ranges.count == 0 {
-                            continue
-                        }
+                        let ranges = rule.matches(in: string, range: effectiveRange)
+                        if ranges.count == 0 { continue }
                         
                         for range in ranges {
                             attributes.append(Attribute(style: style, range: range))
@@ -93,8 +90,9 @@ public struct DGSyntaxHighlighter {
                 for descriptor in language.inlineDescriptors {
                     let style = styleSheet.style(forKind: descriptor.kind)
                     for rule in descriptor.rules {
-                        guard let regex = rule.anchorsMatchLines ? try? NSRegularExpression(pattern: rule.pattern, options: .anchorsMatchLines) : try? NSRegularExpression(pattern: rule.pattern) else { continue }
-                        let ranges = regex.matches(in: string, range: effectiveRange).map { $0.range }
+                        let ranges = rule.matches(in: string, range: effectiveRange)
+                        if ranges.count == 0 { continue }
+                        
                         for range in ranges {
                             attributes.append(Attribute(style: style, range: range))
                         }

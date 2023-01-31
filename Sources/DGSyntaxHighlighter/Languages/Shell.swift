@@ -1,5 +1,5 @@
 //
-//  Bash.swift
+//  Shell.swift
 //  DGSyntaxHighlighter
 //
 //  Created by Xiao Jin on 2023/1/15.
