@@ -26,6 +26,7 @@ public struct DGSyntaxHighlighterStyleSheet {
     public var comment: Style
     public var emphasis: Style
     public var link: Style
+    public var heading: Style
 
     public init() {
 #if canImport(Cocoa)
@@ -37,8 +38,9 @@ public struct DGSyntaxHighlighterStyleSheet {
         keyword = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0xFC5FA3))
         string = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0xFC6A5D))
         comment = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0x6C7986))
-        emphasis = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0x5DD8FF))
+        emphasis = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0xFD8F3F))
         link = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0x5DD8FF))
+        heading = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0x5DD8FF))
     }
 }
 
@@ -51,6 +53,7 @@ extension DGSyntaxHighlighterStyleSheet {
         case .comment: return comment
         case .emphasis: return emphasis
         case .link: return link
+        case .heading: return heading
         }
     }
 }

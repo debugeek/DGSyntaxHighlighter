@@ -66,44 +66,39 @@ public struct DGSyntaxHighlighter {
 
         var effectiveRanges: [NSRange] = [range]
 
+        var descriptors = [SyntaxDescriptor]()
         if options.contains(.multiline) {
-            for descriptor in language.multilineDescriptors {
-                let style = styleSheet.style(forKind: descriptor.kind)
-                for rule in descriptor.rules {
-                    for effectiveRange in effectiveRanges {
-                        let ranges = rule.matches(in: string, range: effectiveRange)
-                        if ranges.count == 0 { continue }
-                        
-                        for range in ranges {
-                            attributes.append(Attribute(style: style, range: range))
-                            effectiveRanges.removeAll(where: { $0.intersection(range) != nil })
-                        }
-                        
-                        effectiveRanges.append(contentsOf: effectiveRange.subranges(byExcludingRanges: ranges))
-                    }
-                }
-            }
+            descriptors.append(contentsOf: language.multilineDescriptors)
+        }
+        if options.contains(.inline) {
+            descriptors.append(contentsOf: language.inlineDescriptors)
         }
 
-        if options.contains(.inline) {
-            for effectiveRange in effectiveRanges {
-                for descriptor in language.inlineDescriptors {
-                    let style = styleSheet.style(forKind: descriptor.kind)
-                    for rule in descriptor.rules {
-                        let ranges = rule.matches(in: string, range: effectiveRange)
-                        if ranges.count == 0 { continue }
-                        
-                        for range in ranges {
-                            attributes.append(Attribute(style: style, range: range))
-                        }
+        for descriptor in descriptors {
+            let style = styleSheet.style(forKind: descriptor.kind)
+            for rule in descriptor.rules {
+                for effectiveRange in effectiveRanges {
+                    let matches = rule.matches(in: string, range: effectiveRange)
+                    if matches.count == 0 { continue }
+
+                    let ranges = matches.map { $0.range }
+                    for range in ranges {
+                        attributes.append(Attribute(style: style, range: range))
                     }
+
+                    let reservedRanges = matches.flatMap({ $0.reservedRanges })
+                    if reservedRanges.count == 0 { continue }
+                    for reservedRange in reservedRanges {
+                        effectiveRanges.removeAll(where: { $0.intersection(reservedRange) != nil })
+                    }
+                    effectiveRanges.append(contentsOf: effectiveRange.subranges(byExcludingRanges: reservedRanges))
                 }
             }
         }
 
         return attributes
     }
-    
+
     public static func language(forIdentifier identifier: Identifier) -> Language {
         switch identifier {
         case .markdown: return Markdown()

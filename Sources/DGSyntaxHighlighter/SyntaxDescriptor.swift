@@ -8,18 +8,32 @@
 
 import Foundation
 
+public struct SyntaxMatchingResult {
+    let range: NSRange
+    let reservedRanges: [NSRange]
+}
+
 public struct SyntaxRule {
     let pattern: String
+    let reservingHints: [Int]
     let anchorsMatchLines: Bool
     let regex: NSRegularExpression?
-    public init(pattern: String, anchorsMatchLines: Bool = false) {
+    public init(pattern: String, reservingHints: [Int] = [], anchorsMatchLines: Bool = false) {
         self.pattern = pattern
+        self.reservingHints = reservingHints
         self.anchorsMatchLines = anchorsMatchLines
         self.regex = anchorsMatchLines ? try? NSRegularExpression(pattern: pattern, options: .anchorsMatchLines) : try? NSRegularExpression(pattern: pattern)
     }
     
-    public func matches(in string: String, range: NSRange) -> [NSRange] {
-        return regex?.matches(in: string, range: range).map { $0.range } ?? []
+    public func matches(in string: String, range: NSRange) -> [SyntaxMatchingResult] {
+        guard let matches = regex?.matches(in: string, range: range) else { return [] }
+
+        return matches.map { match in
+            let reservedRanges = reservingHints
+                .filter { $0 < match.numberOfRanges }
+                .map { match.range(at: $0) }
+            return SyntaxMatchingResult(range: match.range, reservedRanges: reservedRanges)
+        }
     }
 }
 
@@ -32,6 +46,7 @@ public struct SyntaxDescriptor {
         case comment
         case emphasis
         case link
+        case heading
     }
     
     public let name: String
