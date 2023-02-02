@@ -28,7 +28,7 @@ public struct Markdown: Language {
             SyntaxDescriptor(name: "listItem",
                              kind: .keyword,
                              rules: [
-                                SyntaxRule(pattern: "^[^\\S\\n]*(\\d\\.|\\*|\\-|\\+)[^\\S\\n]", anchorsMatchLines: true)
+                                SyntaxRule(pattern: "^[^\\S\\n]*(\\d\\.|\\*|\\-|\\+)[^\\S\\n].*", anchorsMatchLines: true)
                              ]),
 
             SyntaxDescriptor(name: "link",
