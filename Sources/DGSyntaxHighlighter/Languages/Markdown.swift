@@ -28,6 +28,13 @@ public struct Markdown: Language {
                                            anchorsMatchLines: true)
                              ]),
 
+            SyntaxDescriptor(name: "inlineCode",
+                        kind: .string,
+                        rules: [
+                           SyntaxRule(pattern: "\\`.+?\\`",
+                                      reservingHints: [0]),
+                        ]),
+
             SyntaxDescriptor(name: "link",
                         kind: .link,
                         rules: [
@@ -41,12 +48,6 @@ public struct Markdown: Language {
                                            reservingHints: [1]),
                                 SyntaxRule(pattern: "\\b(\\_{1,2}).+?\\1\\b",
                                            reservingHints: [1])
-                             ]),
-            
-            SyntaxDescriptor(name: "inlineCode",
-                             kind: .string,
-                             rules: [
-                                SyntaxRule(pattern: "\\`.+?\\`"),
                              ])
         ]
     }
