@@ -11,43 +11,32 @@ import Foundation
 extension NSRange {
 
     func subranges(byExcludingRanges ranges: [NSRange]) -> [NSRange] {
-        var subranges = [NSRange]()
-
-        var lowerBound = lowerBound
-        var upperBound = upperBound
-
-        var left: NSRange?
-        var right: NSRange?
+        var subranges = [self]
         
         for range in ranges {
-            left = nil
-            right = nil
+            let temp = subranges
+            subranges.removeAll()
             
-            if self.intersection(range) == nil { continue }
-            if range.location <= lowerBound && upperBound <= range.upperBound { return [] }
-
-            if lowerBound < range.lowerBound {
-                left = NSMakeRange(lowerBound, range.lowerBound - lowerBound)
-            }
-
-            if upperBound > range.upperBound {
-                right = NSMakeRange(range.upperBound, upperBound - range.upperBound)
-            }
-
-            if let left = left {
-                subranges.append(left)
-            }
-            
-            if let right = right {
-                lowerBound = right.lowerBound
-                upperBound = right.upperBound
+            for subrange in temp {
+                guard let intersection = subrange.intersection(range) else {
+                    subranges.append(subrange)
+                    continue
+                }
+                
+                if intersection.lowerBound <= subrange.lowerBound, intersection.upperBound >= subrange.upperBound {
+                    continue
+                }
+                
+                if subrange.lowerBound < range.lowerBound {
+                    subranges.append(NSRange(subrange.lowerBound..<range.lowerBound))
+                }
+                
+                if subrange.upperBound > range.upperBound {
+                    subranges.append(NSRange(range.upperBound..<subrange.upperBound))
+                }
             }
         }
-
-        if let right = right {
-            subranges.append(right)
-        }
-
+        
         return subranges
     }
 
