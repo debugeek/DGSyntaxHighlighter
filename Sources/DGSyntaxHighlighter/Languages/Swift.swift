@@ -61,7 +61,8 @@ public struct Swift: Language {
             SyntaxDescriptor(name: "stringBlock",
                              kind: .string,
                              rules: [
-                                SyntaxRule(pattern: "(\\\"{3})(?!\\\")[\\s\\S]*?\\1")]),
+                                SyntaxRule(pattern: "(\\\"{3})(?!\\\")[\\s\\S]*?\\1")
+                             ]),
             
             SyntaxDescriptor(name: "commentBlock",
                              kind: .comment,

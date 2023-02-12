@@ -29,17 +29,17 @@ public struct Markdown: Language {
                              ]),
 
             SyntaxDescriptor(name: "inlineCode",
-                        kind: .string,
-                        rules: [
-                           SyntaxRule(pattern: "\\`.+?\\`",
-                                      reservingHints: [0]),
-                        ]),
+                             kind: .string,
+                             rules: [
+                                SyntaxRule(pattern: "\\`.+?\\`",
+                                           reservingHints: [0]),
+                             ]),
 
             SyntaxDescriptor(name: "link",
-                        kind: .link,
-                        rules: [
-                           SyntaxRule(pattern: "\\!?\\[.*\\]\\(.*\\)"),
-                        ]),
+                             kind: .link,
+                             rules: [
+                                SyntaxRule(pattern: "\\!?\\[.*\\]\\(.*\\)")
+                             ]),
 
             SyntaxDescriptor(name: "emphasis",
                              kind: .emphasis,
