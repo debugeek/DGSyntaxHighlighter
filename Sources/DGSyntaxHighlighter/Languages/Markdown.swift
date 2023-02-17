@@ -23,7 +23,7 @@ public struct Markdown: Language {
             SyntaxDescriptor(name: "listItem",
                              kind: .heading,
                              rules: [
-                                SyntaxRule(pattern: "(^[^\\S\\n]*(\\d\\.|\\*|\\-|\\+)[^\\S\\n]).*",
+                                SyntaxRule(pattern: "(^[^\\S\\n]*(\\d+\\.|\\*|\\-|\\+)[^\\S\\n]).*",
                                            reservingHints: [1],
                                            anchorsMatchLines: true)
                              ]),
