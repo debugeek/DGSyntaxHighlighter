@@ -15,16 +15,16 @@ public struct Markdown: Language {
             SyntaxDescriptor(name: "heading",
                              kind: .heading,
                              rules: [
-                                SyntaxRule(pattern: "(^\\#{1,6}[^\\S\\n]).*",
-                                           reservingHints: [1],
+                                SyntaxRule(pattern: "^\\#{1,6}[^\\S\\n]",
+                                           reservingHints: [0],
                                            anchorsMatchLines: true)
                              ]),
 
             SyntaxDescriptor(name: "listItem",
                              kind: .heading,
                              rules: [
-                                SyntaxRule(pattern: "(^[^\\S\\n]*(\\d+\\.|\\*|\\-|\\+)[^\\S\\n]).*",
-                                           reservingHints: [1],
+                                SyntaxRule(pattern: "^[^\\S\\n]*(\\d+\\.|\\*|\\-|\\+)[^\\S\\n]",
+                                           reservingHints: [0],
                                            anchorsMatchLines: true)
                              ]),
 
