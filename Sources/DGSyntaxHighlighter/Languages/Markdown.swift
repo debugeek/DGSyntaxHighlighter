@@ -31,8 +31,8 @@ public struct Markdown: Language {
             SyntaxDescriptor(name: "inlineCode",
                              kind: .string,
                              rules: [
-                                SyntaxRule(pattern: "\\`.+?\\`",
-                                           reservingHints: [0]),
+                                SyntaxRule(pattern: "(?<!\\`)(\\`+)[^\\`\\n]+\\1(?!\\`)",
+                                           reservingHints: [1]),
                              ]),
 
             SyntaxDescriptor(name: "link",
