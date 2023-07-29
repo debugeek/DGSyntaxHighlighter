@@ -57,7 +57,7 @@ public struct Markdown: Language {
             SyntaxDescriptor(name: "codeBlock",
                              kind: .string,
                              rules: [
-                                SyntaxRule(pattern: "^(\\`{3,})([\\s\\S]*?^[^\\S\\n]*\\1\\`*\\s*?$|[\\s\\S]*)",
+                                SyntaxRule(pattern: "^(\\`{3,})[^\\`]*$([\\s\\S]*?(^\\1\\`*\\h*$)|[\\s\\S]*)",
                                            reservingHints: [0],
                                            anchorsMatchLines: true),
                              ])
