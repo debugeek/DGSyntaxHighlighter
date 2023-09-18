@@ -14,10 +14,12 @@ public struct SyntaxMatchingResult {
 }
 
 public struct SyntaxRule {
+
     let pattern: String
     let reservingHints: [Int]
     let anchorsMatchLines: Bool
     let regex: NSRegularExpression?
+
     public init(pattern: String, reservingHints: [Int] = [], anchorsMatchLines: Bool = false) {
         self.pattern = pattern
         self.reservingHints = reservingHints
@@ -35,6 +37,7 @@ public struct SyntaxRule {
             return SyntaxMatchingResult(range: match.range, reservedRanges: reservedRanges)
         }
     }
+    
 }
 
 public struct SyntaxDescriptor {
@@ -52,5 +55,11 @@ public struct SyntaxDescriptor {
     public let name: String
     public let kind: Kind
     public let rules: [SyntaxRule]
-    
+
+    public init(name: String, kind: Kind, rules: [SyntaxRule]) {
+        self.name = name
+        self.kind = kind
+        self.rules = rules
+    }
+
 }

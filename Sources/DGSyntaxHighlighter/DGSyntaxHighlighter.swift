@@ -36,11 +36,18 @@ public struct DGSyntaxHighlighter {
 
     let styleSheet: DGSyntaxHighlighterStyleSheet
 
+    private let additionalInlineDescriptors: [SyntaxDescriptor]?
+    private let additionalMultilineDescriptors: [SyntaxDescriptor]?
+
     public init(identifier: Identifier = .plain,
-                styleSheet: DGSyntaxHighlighterStyleSheet = DGSyntaxHighlighterStyleSheet()) {
+                styleSheet: DGSyntaxHighlighterStyleSheet = DGSyntaxHighlighterStyleSheet(),
+                additionalInlineDescriptors: [SyntaxDescriptor]? = nil,
+                additionalMultilineDescriptors: [SyntaxDescriptor]? = nil) {
         self.language = Self.language(forIdentifier: identifier)
         self.identifier = identifier
         self.styleSheet = styleSheet
+        self.additionalInlineDescriptors = additionalInlineDescriptors
+        self.additionalMultilineDescriptors = additionalMultilineDescriptors
     }
     
     public struct Attribute {
@@ -69,9 +76,15 @@ public struct DGSyntaxHighlighter {
         var descriptors = [SyntaxDescriptor]()
         if options.contains(.multiline) {
             descriptors.append(contentsOf: language.multilineDescriptors)
+            if let additionalMultilineDescriptors = additionalMultilineDescriptors {
+                descriptors.append(contentsOf: additionalMultilineDescriptors)
+            }
         }
         if options.contains(.inline) {
             descriptors.append(contentsOf: language.inlineDescriptors)
+            if let additionalInlineDescriptors = additionalInlineDescriptors {
+                descriptors.append(contentsOf: additionalInlineDescriptors)
+            }
         }
 
         for descriptor in descriptors {
