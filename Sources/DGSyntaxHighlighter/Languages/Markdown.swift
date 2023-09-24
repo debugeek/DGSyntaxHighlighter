@@ -32,7 +32,7 @@ public struct Markdown: Language {
                              kind: .string,
                              rules: [
                                 SyntaxRule(pattern: "(?<!\\`)(\\`+)[^\\`\\n]+\\1(?!\\`)",
-                                           reservingHints: [1]),
+                                           reservingHints: [0]),
                              ]),
 
             SyntaxDescriptor(name: "link",
