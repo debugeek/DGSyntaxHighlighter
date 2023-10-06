@@ -35,12 +35,12 @@ public struct DGSyntaxHighlighterStyleSheet {
         let textColor = Color.label
 #endif
         text = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: textColor)
-        keyword = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0xFC5FA3))
-        string = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0xFC6A5D))
-        comment = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0x6C7986))
-        emphasis = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0xFD8F3F))
-        link = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0x5DD8FF))
-        heading = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color.color(withHex: 0x5DD8FF))
+        keyword = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color(hex: 0xFC5FA3))
+        string = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color(hex: 0xFC6A5D))
+        comment = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color(hex: 0x6C7986))
+        emphasis = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color(hex: 0xFD8F3F))
+        link = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color(hex: 0x5DD8FF))
+        heading = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color(hex: 0x5DD8FF))
     }
 }
 
