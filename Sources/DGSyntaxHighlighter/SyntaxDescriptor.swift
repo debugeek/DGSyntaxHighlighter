@@ -9,8 +9,8 @@
 import Foundation
 
 public struct SyntaxMatchingResult {
-    let range: NSRange
-    let reservedRanges: [NSRange]
+    public let range: NSRange
+    public let reservedRanges: [NSRange]
 }
 
 public struct SyntaxRule {
