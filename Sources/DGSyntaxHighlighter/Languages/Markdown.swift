@@ -38,7 +38,7 @@ public struct Markdown: Language {
             SyntaxDescriptor(name: "link",
                              kind: .link,
                              rules: [
-                                SyntaxRule(pattern: "\\!?\\[.*\\]\\(.*\\)")
+                                SyntaxRule(pattern: "\\!?\\[.*?\\]\\(.*?\\)")
                              ]),
 
             SyntaxDescriptor(name: "emphasis",
