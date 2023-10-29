@@ -42,16 +42,6 @@ public struct SyntaxRule {
 
 public struct SyntaxDescriptor {
     
-    public enum Kind {
-        case text
-        case keyword
-        case string
-        case comment
-        case emphasis
-        case link
-        case heading
-    }
-    
     public let name: String
     public let kind: Kind
     public let rules: [SyntaxRule]

@@ -34,13 +34,13 @@ public struct DGSyntaxHighlighter {
     
     let language: Language
 
-    let styleSheet: DGSyntaxHighlighterStyleSheet
+    let styleSheet: StyleSheet
 
     private let additionalInlineDescriptors: [SyntaxDescriptor]?
     private let additionalMultilineDescriptors: [SyntaxDescriptor]?
 
     public init(identifier: Identifier = .plain,
-                styleSheet: DGSyntaxHighlighterStyleSheet = DGSyntaxHighlighterStyleSheet(),
+                styleSheet: StyleSheet = .default,
                 additionalInlineDescriptors: [SyntaxDescriptor]? = nil,
                 additionalMultilineDescriptors: [SyntaxDescriptor]? = nil) {
         self.language = Self.language(forIdentifier: identifier)
@@ -55,19 +55,18 @@ public struct DGSyntaxHighlighter {
         public let range: NSRange
     }
     
-    public func highlighted(string: String, options: Options) -> NSAttributedString {
+    public func attributedString(for string: String, options: Options) -> NSAttributedString {
         let attributedString = NSMutableAttributedString(string: string)
-        highlight(string: string, range: NSMakeRange(0, string.utf16.count), options: options)?.forEach {
+        attributes(for: string, range: NSMakeRange(0, string.utf16.count), options: options)?.forEach {
             attributedString.addAttributes([.font: $0.style.font as Any, .foregroundColor: $0.style.foregroundColor as Any], range: $0.range)
         }
         return attributedString
     }
     
-    public func highlight(string: String, range: NSRange, options: Options) -> [Attribute]? {
+    public func attributes(for string: String, range: NSRange, options: Options) -> [Attribute]? {
         var attributes = [Attribute]()
 
-        if options.contains(.plain) {
-            let style = styleSheet.style(forKind: .text)
+        if options.contains(.plain), let style = styleSheet.style(for: .text) {
             attributes.append(Attribute(style: style, range: range))
         }
 
@@ -88,7 +87,10 @@ public struct DGSyntaxHighlighter {
         }
 
         for descriptor in descriptors {
-            let style = styleSheet.style(forKind: descriptor.kind)
+            guard let style = styleSheet.style(for: descriptor.kind) else {
+                continue
+            }
+
             for rule in descriptor.rules {
                 for effectiveRange in effectiveRanges {
                     let matches = rule.matches(in: string, range: effectiveRange)

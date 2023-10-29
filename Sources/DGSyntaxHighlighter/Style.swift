@@ -19,51 +19,46 @@ public typealias Font = UIFont
 public typealias Color = UIColor
 #endif
 
-public struct DGSyntaxHighlighterStyleSheet {
-    public var text: Style
-    public var keyword: Style
-    public var string: Style
-    public var comment: Style
-    public var emphasis: Style
-    public var link: Style
-    public var heading: Style
+public struct StyleSheet {
 
-    public init() {
+    private(set) public var styles = [Kind: Style]()
+
+    public init() {}
+
+    public static var `default`: StyleSheet {
+        get {
+            var styleSheet = StyleSheet()
 #if canImport(Cocoa)
-        let textColor = Color.textColor
+            styleSheet.addStyle(kind: .text, font: Font.systemFont(ofSize: 16), foregroundColor: Color.textColor)
 #elseif canImport(UIKit)
-        let textColor = Color.label
+            styleSheet.addStyle(kind: .text, font: Font.systemFont(ofSize: 16), foregroundColor: Color.label)
 #endif
-        text = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: textColor)
-        keyword = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color(hex: 0xFC5FA3))
-        string = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color(hex: 0xFC6A5D))
-        comment = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color(hex: 0x6C7986))
-        emphasis = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color(hex: 0xFD8F3F))
-        link = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color(hex: 0x5DD8FF))
-        heading = Style(font: Font.monospacedSystemFont(ofSize: 16, weight: .regular), foregroundColor: Color(hex: 0x5DD8FF))
-    }
-}
-
-extension DGSyntaxHighlighterStyleSheet {
-    public func style(forKind kind: SyntaxDescriptor.Kind) -> Style {
-        switch kind {
-        case .text: return text
-        case .keyword: return keyword
-        case .string: return string
-        case .comment: return comment
-        case .emphasis: return emphasis
-        case .link: return link
-        case .heading: return heading
+            return styleSheet
         }
     }
+
+    public mutating func addStyle(kind: Kind, font: Font, foregroundColor: Color) {
+        let style = Style(kind: kind, font: font, foregroundColor: foregroundColor)
+        addStyle(style, for: kind)
+    }
+
+    public mutating func addStyle(_ style: Style, for kind: Kind) {
+        styles[kind] = style
+    }
+
+    public func style(for kind: Kind) -> Style? {
+        return styles[kind]
+    }
+
 }
 
 public struct Style {
-    public var font: Font?
-    public var foregroundColor: Color?
-    public init(font: Font?, foregroundColor: Color?) {
+    public let kind: Kind
+    public let font: Font?
+    public let foregroundColor: Color?
+    public init(kind: Kind, font: Font? = nil, foregroundColor: Color? = nil) {
+        self.kind = kind
         self.font = font
         self.foregroundColor = foregroundColor
     }
 }
-
