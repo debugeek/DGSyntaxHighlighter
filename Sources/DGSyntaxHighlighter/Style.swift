@@ -29,21 +29,16 @@ public struct StyleSheet {
         get {
             var styleSheet = StyleSheet()
 #if canImport(Cocoa)
-            styleSheet.addStyle(kind: .text, font: Font.systemFont(ofSize: 16), foregroundColor: Color.textColor)
+            styleSheet.addStyle(Style(kind: .text, font: Font.systemFont(ofSize: 16), foregroundColor: Color.textColor))
 #elseif canImport(UIKit)
-            styleSheet.addStyle(kind: .text, font: Font.systemFont(ofSize: 16), foregroundColor: Color.label)
+            styleSheet.addStyle(Style(kind: .text, font: Font.systemFont(ofSize: 16), foregroundColor: Color.label))
 #endif
             return styleSheet
         }
     }
 
-    public mutating func addStyle(kind: Kind, font: Font, foregroundColor: Color) {
-        let style = Style(kind: kind, font: font, foregroundColor: foregroundColor)
-        addStyle(style, for: kind)
-    }
-
-    public mutating func addStyle(_ style: Style, for kind: Kind) {
-        styles[kind] = style
+    public mutating func addStyle(_ style: Style) {
+        styles[style.kind] = style
     }
 
     public func style(for kind: Kind) -> Style? {

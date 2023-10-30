@@ -50,24 +50,37 @@ public struct DGSyntaxHighlighter {
         self.additionalMultilineDescriptors = additionalMultilineDescriptors
     }
     
-    public struct Attribute {
-        public let style: Style
+    public struct SyntaxAttribute {
         public let range: NSRange
+        public let kind: Kind
+        public let style: Style?
+        public init(range: NSRange, kind: Kind, style: Style?) {
+            self.range = range
+            self.kind = kind
+            self.style = style
+        }
     }
-    
+
     public func attributedString(for string: String, options: Options) -> NSAttributedString {
         let attributedString = NSMutableAttributedString(string: string)
         attributes(for: string, range: NSMakeRange(0, string.utf16.count), options: options)?.forEach {
-            attributedString.addAttributes([.font: $0.style.font as Any, .foregroundColor: $0.style.foregroundColor as Any], range: $0.range)
+            var attributes = [NSAttributedString.Key: Any]()
+            if let font = $0.style?.font {
+                attributes[.font] = font
+            }
+            if let foregroundColor = $0.style?.foregroundColor {
+                attributes[.foregroundColor] = foregroundColor
+            }
+            attributedString.addAttributes(attributes, range: $0.range)
         }
         return attributedString
     }
     
-    public func attributes(for string: String, range: NSRange, options: Options) -> [Attribute]? {
-        var attributes = [Attribute]()
+    public func attributes(for string: String, range: NSRange, options: Options) -> [SyntaxAttribute]? {
+        var attributes = [SyntaxAttribute]()
 
-        if options.contains(.plain), let style = styleSheet.style(for: .text) {
-            attributes.append(Attribute(style: style, range: range))
+        if options.contains(.plain) {
+            attributes.append(SyntaxAttribute(range: range, kind: .text, style: styleSheet.style(for: .text)))
         }
 
         var effectiveRanges: [NSRange] = [range]
@@ -87,19 +100,14 @@ public struct DGSyntaxHighlighter {
         }
 
         for descriptor in descriptors {
-            guard let style = styleSheet.style(for: descriptor.kind) else {
-                continue
-            }
-
             for rule in descriptor.rules {
                 for effectiveRange in effectiveRanges {
                     let matches = rule.matches(in: string, range: effectiveRange)
                     if matches.count == 0 { continue }
 
-                    let ranges = matches.map { $0.range }
-                    for range in ranges {
-                        attributes.append(Attribute(style: style, range: range))
-                    }
+                    attributes.append(contentsOf: matches.map {
+                        SyntaxAttribute(range: $0.range, kind: descriptor.kind, style: styleSheet.style(for: descriptor.kind))
+                    })
 
                     let reservedRanges = matches.flatMap({ $0.reservedRanges })
                     if reservedRanges.count == 0 { continue }
