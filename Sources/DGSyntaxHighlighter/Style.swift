@@ -10,7 +10,7 @@ import Foundation
 import DGExtension
 
 #if canImport(Cocoa)
-import Cocoa
+import AppKit
 public typealias Font = NSFont
 public typealias Color = NSColor
 #elseif canImport(UIKit)
