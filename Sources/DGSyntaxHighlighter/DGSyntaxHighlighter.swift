@@ -83,8 +83,6 @@ public struct DGSyntaxHighlighter {
             attributes.append(SyntaxAttribute(range: range, kind: .text, style: styleSheet.style(for: .text)))
         }
 
-        var effectiveRanges: [NSRange] = [range]
-
         var descriptors = [SyntaxDescriptor]()
         if options.contains(.multiline) {
             descriptors.append(contentsOf: language.multilineDescriptors)
@@ -99,23 +97,44 @@ public struct DGSyntaxHighlighter {
             }
         }
 
+        var candidateRanges: [NSRange] = [range]
+
         for descriptor in descriptors {
             for rule in descriptor.rules {
-                for effectiveRange in effectiveRanges {
-                    let matches = rule.matches(in: string, range: effectiveRange)
-                    if matches.count == 0 { continue }
+                let group = DispatchGroup()
+                let queue = DispatchQueue(label: "DGSyntaxHighlighterQueue")
+                let ranges = candidateRanges
 
-                    attributes.append(contentsOf: matches.map {
-                        SyntaxAttribute(range: $0.range, kind: descriptor.kind, style: styleSheet.style(for: descriptor.kind))
-                    })
-
-                    let reservedRanges = matches.flatMap({ $0.reservedRanges })
-                    if reservedRanges.count == 0 { continue }
-                    for reservedRange in reservedRanges {
-                        effectiveRanges.removeAll(where: { $0.intersection(reservedRange) != nil })
+                DispatchQueue.concurrentPerform(iterations: ranges.count) {
+                    group.enter()
+                    defer {
+                        group.leave()
                     }
-                    effectiveRanges.append(contentsOf: effectiveRange.subranges(byExcludingRanges: reservedRanges))
+
+                    let range = ranges[$0]
+                    let matches = rule.matches(in: string, range: range)
+                    if matches.count == 0 {
+                        return
+                    }
+
+                    let matchedAttributes = matches.map {
+                        SyntaxAttribute(range: $0.range, kind: descriptor.kind, style: styleSheet.style(for: descriptor.kind))
+                    }
+                    let reservedRanges = matches.flatMap({ $0.reservedRanges })
+
+                    queue.sync {
+                        attributes.append(contentsOf: matchedAttributes)
+
+                        if reservedRanges.count > 0 {
+                            for reservedRange in reservedRanges {
+                                candidateRanges.removeAll(where: { $0.intersection(reservedRange) != nil })
+                            }
+                            candidateRanges.append(contentsOf: range.subranges(byExcludingRanges: reservedRanges))
+                        }
+                    }
                 }
+
+                group.wait()
             }
         }
 

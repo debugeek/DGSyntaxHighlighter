@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		985B07102B0DABEB00CAE63A /* Theme.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 985B070F2B0DABEA00CAE63A /* Theme.xcassets */; };
 		98A6E5CD28D208DE00DF4466 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A6E5CC28D208DE00DF4466 /* AppDelegate.swift */; };
 		98A6E5CF28D208DE00DF4466 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98A6E5CE28D208DE00DF4466 /* ViewController.swift */; };
 		98A6E5D128D208DF00DF4466 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 98A6E5D028D208DF00DF4466 /* Assets.xcassets */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		985B070F2B0DABEA00CAE63A /* Theme.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Theme.xcassets; sourceTree = "<group>"; };
 		98A6E5C928D208DE00DF4466 /* DGSyntaxHighlighterExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DGSyntaxHighlighterExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98A6E5CC28D208DE00DF4466 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		98A6E5CE28D208DE00DF4466 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -57,6 +59,7 @@
 		98A6E5CB28D208DE00DF4466 /* DGSyntaxHighlighterExample */ = {
 			isa = PBXGroup;
 			children = (
+				985B070F2B0DABEA00CAE63A /* Theme.xcassets */,
 				98A6E5CC28D208DE00DF4466 /* AppDelegate.swift */,
 				98A6E5CE28D208DE00DF4466 /* ViewController.swift */,
 				98A6E5D028D208DF00DF4466 /* Assets.xcassets */,
@@ -143,6 +146,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				985B07102B0DABEB00CAE63A /* Theme.xcassets in Resources */,
 				98A6E5D128D208DF00DF4466 /* Assets.xcassets in Resources */,
 				98A6E5D428D208DF00DF4466 /* Main.storyboard in Resources */,
 			);
