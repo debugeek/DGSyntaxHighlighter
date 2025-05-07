@@ -29,9 +29,9 @@ public struct StyleSheet {
         get {
             var styleSheet = StyleSheet()
 #if canImport(Cocoa)
-            styleSheet.addStyle(Style(kind: .text, font: Font.systemFont(ofSize: 16), foregroundColor: Color.textColor))
+            styleSheet.addStyle(Style(kind: .plain, font: Font.systemFont(ofSize: 16), foregroundColor: Color.textColor))
 #elseif canImport(UIKit)
-            styleSheet.addStyle(Style(kind: .text, font: Font.systemFont(ofSize: 16), foregroundColor: Color.label))
+            styleSheet.addStyle(Style(kind: .plain, font: Font.systemFont(ofSize: 16), foregroundColor: Color.label))
 #endif
             return styleSheet
         }

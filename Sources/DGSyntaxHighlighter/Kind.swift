@@ -9,11 +9,15 @@
 import Foundation
 
 public enum Kind {
-    case text
+    case plain
     case keyword
     case string
     case comment
     case emphasis
     case link
     case heading
+    case orderedList
+    case unorderedList
+    case inlineCode
+    case codeBlock
 }

@@ -42,16 +42,9 @@ public struct SyntaxRule {
 
 public struct SyntaxDescriptor {
     
-    public let name: String
     public let kind: Kind
     public let rules: [SyntaxRule]
-
-    public init(name: String, kind: Kind, rules: [SyntaxRule]) {
-        self.name = name
-        self.kind = kind
-        self.rules = rules
-    }
     
-    static let plain = SyntaxDescriptor(name: "plain", kind: .text, rules: [])
+    static let plain = SyntaxDescriptor(kind: .plain, rules: [])
 
 }

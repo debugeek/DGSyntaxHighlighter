@@ -75,7 +75,7 @@ public struct DGSyntaxHighlighter {
         var attributes = [SyntaxAttribute]()
 
         if options.contains(.plain) {
-            attributes.append(SyntaxAttribute(range: range, descriptor: SyntaxDescriptor.plain, style: styleSheet.style(for: .text)))
+            attributes.append(SyntaxAttribute(range: range, descriptor: SyntaxDescriptor.plain, style: styleSheet.style(for: .plain)))
         }
 
         var descriptors = [SyntaxDescriptor]()

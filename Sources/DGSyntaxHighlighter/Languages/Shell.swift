@@ -12,44 +12,37 @@ public struct Shell: Language {
 
     public var inlineDescriptors: [SyntaxDescriptor] {
         return [
-            SyntaxDescriptor(name: "keywords",
-                             kind: .keyword,
+            SyntaxDescriptor(kind: .keyword,
                              rules: [
                                 SyntaxRule(pattern: "\\b(if|then|else|elif|fi|for|while|in|do|done|case|esac|function)\\b")
                              ]),
 
-            SyntaxDescriptor(name: "literals",
-                             kind: .keyword,
+            SyntaxDescriptor(kind: .keyword,
                              rules: [
                                 SyntaxRule(pattern: "\\b(true|false)\\b")
                              ]),
 
-            SyntaxDescriptor(name: "shellBuiltinKeywords",
-                             kind: .keyword,
+            SyntaxDescriptor(kind: .keyword,
                              rules: [
                                 SyntaxRule(pattern: "\\b(break|cd|continue|eval|exec|exit|export|getopts|hash|pwd|readonly|return|shift|test|times|trap|umask|unsed)\\b")
                              ]),
             
-            SyntaxDescriptor(name: "bashBuiltinKeywords",
-                             kind: .keyword,
+            SyntaxDescriptor(kind: .keyword,
                              rules: [
                                 SyntaxRule(pattern: "\\b(alias|bind|builtin|caller|command|declare|echo|enable|help|let|local|logout|mapfile|printf|read|readarray|source|type|typeset|ulimit|unalias)\\b")
                              ]),
             
-            SyntaxDescriptor(name: "variable",
-                             kind: .emphasis,
+            SyntaxDescriptor(kind: .emphasis,
                              rules: [
                                 SyntaxRule(pattern: "\\$[\\w\\d]*")
                              ]),
             
-            SyntaxDescriptor(name: "string",
-                             kind: .string,
+            SyntaxDescriptor(kind: .string,
                              rules: [
                                 SyntaxRule(pattern: "(\"|').*\\1")
                              ]),
             
-            SyntaxDescriptor(name: "commentLine",
-                             kind: .comment,
+            SyntaxDescriptor(kind: .comment,
                              rules: [
                                 SyntaxRule(pattern: "#.*")
                              ])

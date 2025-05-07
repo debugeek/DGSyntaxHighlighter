@@ -15,11 +15,11 @@ class ViewController: NSViewController, NSTextViewDelegate {
     
     lazy var highlighter = {
         var styleSheet = StyleSheet()
-        styleSheet.addStyle(Style(kind: .text, foregroundColor: NSColor(named: "text")))
+        styleSheet.addStyle(Style(kind: .plain, foregroundColor: NSColor(named: "plain")))
         styleSheet.addStyle(Style(kind: .emphasis, foregroundColor: NSColor(named: "emphasis")))
         styleSheet.addStyle(Style(kind: .heading, foregroundColor: NSColor(named: "heading")))
         styleSheet.addStyle(Style(kind: .link, foregroundColor: NSColor(named: "link")))
-        styleSheet.addStyle(Style(kind: .string, foregroundColor: NSColor(named: "string")))
+        styleSheet.addStyle(Style(kind: .inlineCode, foregroundColor: NSColor(named: "inlineCode")))
 
         let highlighter = DGSyntaxHighlighter(identifier: .markdown, styleSheet: styleSheet)
         return highlighter
