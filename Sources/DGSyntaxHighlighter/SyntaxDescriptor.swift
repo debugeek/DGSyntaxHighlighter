@@ -51,5 +51,7 @@ public struct SyntaxDescriptor {
         self.kind = kind
         self.rules = rules
     }
+    
+    static let plain = SyntaxDescriptor(name: "plain", kind: .text, rules: [])
 
 }

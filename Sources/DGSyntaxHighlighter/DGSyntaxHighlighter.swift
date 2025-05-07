@@ -52,13 +52,8 @@ public struct DGSyntaxHighlighter {
     
     public struct SyntaxAttribute {
         public let range: NSRange
-        public let kind: Kind
+        public let descriptor: SyntaxDescriptor
         public let style: Style?
-        public init(range: NSRange, kind: Kind, style: Style?) {
-            self.range = range
-            self.kind = kind
-            self.style = style
-        }
     }
 
     public func attributedString(for string: String, options: Options) -> NSAttributedString {
@@ -80,7 +75,7 @@ public struct DGSyntaxHighlighter {
         var attributes = [SyntaxAttribute]()
 
         if options.contains(.plain) {
-            attributes.append(SyntaxAttribute(range: range, kind: .text, style: styleSheet.style(for: .text)))
+            attributes.append(SyntaxAttribute(range: range, descriptor: SyntaxDescriptor.plain, style: styleSheet.style(for: .text)))
         }
 
         var descriptors = [SyntaxDescriptor]()
@@ -118,7 +113,7 @@ public struct DGSyntaxHighlighter {
                     }
 
                     let matchedAttributes = matches.map {
-                        SyntaxAttribute(range: $0.range, kind: descriptor.kind, style: styleSheet.style(for: descriptor.kind))
+                        SyntaxAttribute(range: $0.range, descriptor: descriptor, style: styleSheet.style(for: descriptor.kind))
                     }
                     let reservedRanges = matches.flatMap({ $0.reservedRanges })
 
