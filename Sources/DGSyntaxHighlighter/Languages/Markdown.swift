@@ -10,27 +10,49 @@ import Foundation
 
 public struct Markdown: Language {
 
+    public struct OrderedListCapture: SyntaxCapture {
+        public var range: NSRange
+        public var indexRange: NSRange?
+        public var markerRange: NSRange?
+        public init(range: NSRange) { self.range = range }
+    }
+
+    public struct UnorderedListCapture: SyntaxCapture {
+        public var range: NSRange
+        public var markerRange: NSRange?
+        public init(range: NSRange) { self.range = range }
+    }
+
+    public struct LinkCapture: SyntaxCapture {
+        public var range: NSRange
+        public var titleRange: NSRange?
+        public var urlRange: NSRange?
+        public init(range: NSRange) { self.range = range }
+    }
+
     public var inlineDescriptors: [SyntaxDescriptor] {
         return [
             SyntaxDescriptor(kind: .heading,
                              rules: [
-                                SyntaxRule(pattern: "^\\#{1,6}[^\\S\\n]",
+                                SyntaxRule(pattern: #"^#{1,6}[^\S\n]"#,
                                            reservingHints: [0],
                                            anchorsMatchLines: true)
                              ]),
 
             SyntaxDescriptor(kind: .orderedList,
                              rules: [
-                                SyntaxRule(pattern: "^[^\\S\\n]*(\\d+\\.)[^\\S\\n]",
+                                SyntaxRule(pattern: #"^([^\S\n]*(\d+)\.[^\S\n])"#,
                                            reservingHints: [0],
-                                           anchorsMatchLines: true)
+                                           anchorsMatchLines: true,
+                                           captureDescriptor: SyntaxCaptureDescriptor<OrderedListCapture>(mapping: [1: \.markerRange, 2: \.indexRange]))
                              ]),
             
             SyntaxDescriptor(kind: .unorderedList,
                              rules: [
-                                SyntaxRule(pattern: "^[^\\S\\n]*(\\*|\\-|\\+)[^\\S\\n]",
+                                SyntaxRule(pattern: #"^([^\S\n]*\*|\-|\+[^\S\n])"#,
                                            reservingHints: [0],
-                                           anchorsMatchLines: true)
+                                           anchorsMatchLines: true,
+                                           captureDescriptor: SyntaxCaptureDescriptor<UnorderedListCapture>(mapping: [1: \.markerRange]))
                              ]),
 
             SyntaxDescriptor(kind: .inlineCode,
@@ -41,7 +63,8 @@ public struct Markdown: Language {
 
             SyntaxDescriptor(kind: .link,
                              rules: [
-                                SyntaxRule(pattern: "\\!?\\[.*?\\]\\(.*?\\)")
+                                SyntaxRule(pattern: #"\!?\[.*?\]\(.*?\)"#,
+                                           captureDescriptor: SyntaxCaptureDescriptor<LinkCapture>(mapping: [1: \.titleRange, 2: \.urlRange]))
                              ]),
 
             SyntaxDescriptor(kind: .emphasis,

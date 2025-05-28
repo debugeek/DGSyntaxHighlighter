@@ -31,9 +31,7 @@ public struct DGSyntaxHighlighter {
     }
     
     let identifier: Identifier
-    
     let language: Language
-
     let styleSheet: StyleSheet
 
     private let additionalInlineDescriptors: [SyntaxDescriptor]?
@@ -53,17 +51,24 @@ public struct DGSyntaxHighlighter {
     public struct SyntaxAttribute {
         public let range: NSRange
         public let descriptor: SyntaxDescriptor
-        public let style: Style?
+        public let style: Style
+        public let capture: SyntaxCapture?
+        init(range: NSRange, descriptor: SyntaxDescriptor, style: Style, capture: SyntaxCapture? = nil) {
+            self.range = range
+            self.descriptor = descriptor
+            self.style = style
+            self.capture = capture
+        }
     }
 
     public func attributedString(for string: String, options: Options) -> NSAttributedString {
         let attributedString = NSMutableAttributedString(string: string)
         attributes(for: string, range: NSMakeRange(0, string.utf16.count), options: options)?.forEach {
             var attributes = [NSAttributedString.Key: Any]()
-            if let font = $0.style?.font {
+            if let font = $0.style.font {
                 attributes[.font] = font
             }
-            if let foregroundColor = $0.style?.foregroundColor {
+            if let foregroundColor = $0.style.foregroundColor {
                 attributes[.foregroundColor] = foregroundColor
             }
             attributedString.addAttributes(attributes, range: $0.range)
@@ -74,8 +79,8 @@ public struct DGSyntaxHighlighter {
     public func attributes(for string: String, range: NSRange, options: Options) -> [SyntaxAttribute]? {
         var attributes = [SyntaxAttribute]()
 
-        if options.contains(.plain) {
-            attributes.append(SyntaxAttribute(range: range, descriptor: SyntaxDescriptor.plain, style: styleSheet.style(for: .plain)))
+        if options.contains(.plain), let style = styleSheet.style(for: .plain) {
+            attributes.append(SyntaxAttribute(range: range, descriptor: SyntaxDescriptor.plain, style: style))
         }
 
         var descriptors = [SyntaxDescriptor]()
@@ -95,7 +100,14 @@ public struct DGSyntaxHighlighter {
         var candidateRanges: [NSRange] = [range]
 
         for descriptor in descriptors {
-            for rule in descriptor.rules {
+            guard
+                let style = styleSheet.style(for: descriptor.kind),
+                let rules = descriptor.rules
+            else {
+                continue
+            }
+
+            for rule in rules {
                 let group = DispatchGroup()
                 let queue = DispatchQueue(label: "DGSyntaxHighlighterQueue")
                 let ranges = candidateRanges
@@ -113,7 +125,10 @@ public struct DGSyntaxHighlighter {
                     }
 
                     let matchedAttributes = matches.map {
-                        SyntaxAttribute(range: $0.range, descriptor: descriptor, style: styleSheet.style(for: descriptor.kind))
+                        SyntaxAttribute(range: $0.range,
+                                        descriptor: descriptor,
+                                        style: style,
+                                        capture: $0.capture)
                     }
                     let reservedRanges = matches.flatMap({ $0.reservedRanges })
 
