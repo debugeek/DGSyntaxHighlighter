@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol SyntaxCapture {
+public protocol SyntaxCapture: Hashable {
     var range: NSRange { get }
     init(range: NSRange)
 }
@@ -46,7 +46,7 @@ public struct AnySyntaxCaptureDescriptor {
 public struct SyntaxMatchingResult {
     public let range: NSRange
     public let reservedRanges: [NSRange]
-    public let capture: SyntaxCapture?
+    public let capture: (any SyntaxCapture)?
 }
 
 public struct SyntaxRule {
@@ -96,7 +96,7 @@ public struct SyntaxRule {
                 .map { match.range(at: $0) }
             return SyntaxMatchingResult(range: match.range,
                                         reservedRanges: reservedRanges,
-                                        capture: captureDescriptor?.create(from: match) as? SyntaxCapture)
+                                        capture: captureDescriptor?.create(from: match) as? any SyntaxCapture)
         }
     }
     

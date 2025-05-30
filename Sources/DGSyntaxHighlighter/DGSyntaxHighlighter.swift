@@ -52,8 +52,8 @@ public struct DGSyntaxHighlighter {
         public let range: NSRange
         public let descriptor: SyntaxDescriptor
         public let style: Style
-        public let capture: SyntaxCapture?
-        init(range: NSRange, descriptor: SyntaxDescriptor, style: Style, capture: SyntaxCapture? = nil) {
+        public let capture: (any SyntaxCapture)?
+        init(range: NSRange, descriptor: SyntaxDescriptor, style: Style, capture: (any SyntaxCapture)? = nil) {
             self.range = range
             self.descriptor = descriptor
             self.style = style
