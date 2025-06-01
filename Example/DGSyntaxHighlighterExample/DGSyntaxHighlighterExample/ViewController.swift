@@ -18,6 +18,8 @@ class ViewController: NSViewController, NSTextViewDelegate {
         styleSheet.addStyle(Style(kind: .plain, foregroundColor: NSColor(named: "plain")))
         styleSheet.addStyle(Style(kind: .emphasis, foregroundColor: NSColor(named: "emphasis")))
         styleSheet.addStyle(Style(kind: .heading, foregroundColor: NSColor(named: "heading")))
+        styleSheet.addStyle(Style(kind: .orderedList, foregroundColor: NSColor(named: "orderedList")))
+        styleSheet.addStyle(Style(kind: .unorderedList, foregroundColor: NSColor(named: "unorderedList")))
         styleSheet.addStyle(Style(kind: .link, foregroundColor: NSColor(named: "link")))
         styleSheet.addStyle(Style(kind: .inlineCode, foregroundColor: NSColor(named: "inlineCode")))
 

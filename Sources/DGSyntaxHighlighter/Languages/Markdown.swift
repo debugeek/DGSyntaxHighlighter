@@ -34,14 +34,14 @@ public struct Markdown: Language {
         return [
             SyntaxDescriptor(kind: .heading,
                              rules: [
-                                SyntaxRule(pattern: #"^#{1,6}[^\S\n]"#,
+                                SyntaxRule(pattern: #"^#{1,6}[ \t]"#,
                                            reservingHints: [0],
                                            anchorsMatchLines: true)
                              ]),
 
             SyntaxDescriptor(kind: .orderedList,
                              rules: [
-                                SyntaxRule(pattern: #"^([^\S\n]*(\d+)\.[^\S\n])"#,
+                                SyntaxRule(pattern: #"^([ \t]*(\d+)\.[ \t]+)"#,
                                            reservingHints: [0],
                                            anchorsMatchLines: true,
                                            captureDescriptor: SyntaxCaptureDescriptor<OrderedListCapture>(mapping: [1: \.markerRange, 2: \.indexRange]))
@@ -49,7 +49,7 @@ public struct Markdown: Language {
             
             SyntaxDescriptor(kind: .unorderedList,
                              rules: [
-                                SyntaxRule(pattern: #"^([^\S\n]*\*|\-|\+[^\S\n])"#,
+                                SyntaxRule(pattern: #"^([ \t]*[\*\-\+][ \t])"#,
                                            reservingHints: [0],
                                            anchorsMatchLines: true,
                                            captureDescriptor: SyntaxCaptureDescriptor<UnorderedListCapture>(mapping: [1: \.markerRange]))
